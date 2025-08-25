@@ -8,6 +8,7 @@
 
 <Shortcuts options={{ generateKbd: false}}/>
 <svelte:head>
+	<title>Guest Who</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 

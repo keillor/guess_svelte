@@ -1,74 +1,76 @@
-<script lang='ts'>
-	import FlippableCard from '$lib/gameElements/flippableCard.svelte';
-	import GameNavigationButtons from '$lib/gameElements/GameNavigationButtons.svelte';
-	import Sidebar from '$lib/gameElements/Sidebar.svelte';
-	import { Character } from '$lib/models/character';
-	import { shortcuts } from 'svelte-keyboard-shortcuts';
-	let flipArray = $state(Array(24).fill(true));
-	let remaining = $derived(
-		flipArray.reduce((accumulator, value) => accumulator + (value ? 1 : 0), 0)
-	);
-
-	/**
-	 * @param {number} index
-	 */
-	function handleFlip(index: number) {
-		flipArray[index] = !flipArray[index];
-		//flipArray = flipArray.map((value, i) => i == index ? !value : value);
-	}
-	const exampleImg = 'https://images.pexels.com/photos/3789888/pexels-photo-3789888.jpeg';
-	const dummyCharacter = new Character('Elizabeth', exampleImg);
-	const characterData = Array(24).fill(dummyCharacter);
-</script>
-<main class='gameboard'>
-	<Sidebar {dummyCharacter} {remaining}/>
-	<div class="flippableContainer">
-		{#each characterData as character, i}
-			<FlippableCard {character} {handleFlip} index={i} flipped={flipArray[i]} />
-		{/each}
+<main>
+	<div class="logoHolder">
+		<img class="logo" src="/logo.png" alt="Guest Who logo" />
 	</div>
+	<p class="subtitle">a guessing game</p>
+
+	<div class="navButtonDiv">
+		<button class="navButtons">Create Game</button>
+		<button class="navButtons">Join Game</button>
+		<button class="navButtons">Edit Characters</button>
+	</div>
+
+	<footer>
+		Made With 💜 by <a class="ghLink" href="https://www.github.com/keillor">KJ</a> -
+		<a class="ghLink" href="https://github.com/keillor/guess_svelte">Source Code</a>
+	</footer>
 </main>
-<GameNavigationButtons activeButtons={Array(4).fill(true)}/>
-
-
-
-<div hidden>
-	<button class='items-center' use:shortcuts={{ keys: ['d'], type: 'callback', fn: () => {
-		for(let i = 0; i < flipArray.length; i++) {
-			flipArray[i] = false;
-		}
-	}}} hidden>Flip All Up!</button>
-	<button class='items-center' use:shortcuts={{ keys: ['u'], type: 'callback', fn: () => {
-		for(let i = 0; i < flipArray.length; i++) {
-			flipArray[i] = true;
-		}
-	}}} hidden>Flip All Down!</button>
-</div>
-
 
 <style>
-	.gameboard {
-		padding: 1em;
-		@media (width >= 60rem /* 768px */) {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-around;
-		}
-
+	main {
+		height: 100%;
 	}
-	.flippableContainer {
-		display: grid;
-		flex-wrap: wrap;
+
+	.logo {
 		width: 100%;
-		justify-items: center;
-		gap: 0.25em;
+		max-width: 100em;
+	}
+
+	.logoHolder {
+		display: flex;
 		flex-direction: row;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		@media (width >= 40rem /* 640px */) {
-			grid-template-columns: repeat(5, minmax(0, 1fr));
+		justify-content: center;
+	}
+
+	.navButtonDiv {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 3em;
+		height: 100%;
+		@media (width >= 60rem /* 768px */) {
+			flex-direction: row;
 		}
-		@media (width >= 48rem /* 768px */) {
-			grid-template-columns: repeat(6, minmax(0, 1fr));
-		}
+	}
+
+	.subtitle {
+		text-align: center;
+		font-style: italic;
+		font-size: 2em;
+		color: var(--color-white);
+		padding-bottom: 1em;
+	}
+
+	footer {
+		font-size: 2em;
+		position: fixed;
+		bottom: 0px;
+		width: 100%;
+		text-align: center;
+		background-color: var(--color-blue-400);
+		color: var(--color-black);
+	}
+	.ghLink:hover {
+		text-decoration: underline;
+	}
+
+	.navButtons {
+		background-color: var(--color-purple-500);
+		color: var(--color-white);
+		width: 8em;
+		font-size: 2em;
+		border-radius: var(--radius-3xl);
+		padding: 0.5em;
 	}
 </style>

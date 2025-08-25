@@ -1,6 +1,18 @@
-<script>
+<script lang="ts">
+	import type { Character } from '$lib/models/character';
+
 	//let flipped = $state(true);
-	let { name, handleFlip, flipped, index } = $props();
+	let {
+		character,
+		handleFlip,
+		flipped,
+		index
+	}: {
+		character: Character;
+		handleFlip: Function;
+		flipped: Boolean;
+		index: number;
+	} = $props();
 </script>
 
 <button
@@ -9,13 +21,19 @@
 	style:--bg-1="var(--color-white)"
 	onclick={() => handleFlip(index)}
 >
-	<div class="front flex flex-col">
+	<div class="paddin">
 		<img
-			class="characterImage self-center"
-			src="https://images.pexels.com/photos/18111094/pexels-photo-18111094/free-photo-of-city-and-river-with-boat.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-			alt="a random boat"
+			class="characterImage self-center shadow-2xl"
+			src={character.url.href}
+			alt={`character ${character.name}`}
 		/>
-		<span class="text-3xl text-black">{name}</span>
+		<span class=" characterName">
+			{#if character.name.length < 10}
+				{character.name}
+			{:else}
+				{character.name.slice(0,7)}...
+			{/if}
+		</span>
 	</div>
 	<div class="back">
 		<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
@@ -30,9 +48,19 @@
 </button>
 
 <style>
+
+	.characterName {
+		font-size: var(--text-2xl) /* 1.875rem = 30px */;
+    	line-height: var(--tw-leading, var(--text-3xl--line-height));
+		color: var(--color-black);
+		/* text-underline-offset: 0.05em;
+		text-decoration-line: underline; */
+
+	}
 	.characterImage {
 		aspect-ratio: 1/1;
-		border-radius: 2em;
+		object-fit: cover;
+		border-radius: 1em;
 		user-drag: none;
 		-webkit-user-drag: none;
 		user-select: none;
@@ -40,25 +68,30 @@
 		-webkit-user-select: none;
 		-ms-user-select: none;
 	}
+	.spacer{
+		flex-grow: 1;
+	}
 	.card {
-		border: solid black 0.5px;
+		/* border: solid black 0.5px; */
 		position: relative;
 		aspect-ratio: 2.5 / 3;
 		font-size: 0.5rem;
-		height: 30em;
+		height: 18em;
 		background: var(--bg-1);
-		border-radius: 2em;
+		border-radius: 1em;
 		transform: rotateY(180deg);
 		transition: transform 0.4s;
 		transform-style: preserve-3d;
 		padding: 0;
 		user-select: none;
 		cursor: pointer;
+		box-shadow: var(--shadow-lg)
 	}
 
-	.front,
+	.paddin,
 	.back {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		position: absolute;
 		width: 100%;
@@ -69,10 +102,15 @@
 		border-radius: 2em;
 		border: 1px solid var(--fg-2);
 		box-sizing: border-box;
-		padding: 2em;
+		padding: 1em;
 	}
 
 	.front {
+		text-overflow: clip;
+		overflow: hidden;
+		text-wrap-mode: nowrap;
+		white-space: initial;
+		text-align: left;
 	}
 
 	.back {

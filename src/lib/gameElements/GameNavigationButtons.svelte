@@ -3,7 +3,7 @@
 </script>
 
 <div class='actionButtonDiv'>
-    <button class='actionButton' disabled={!activeButtons[1]}>
+    <button class='actionButton' disabled={!activeButtons[0]}>
         I'm Done
     </button>
 

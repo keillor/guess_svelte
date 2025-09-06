@@ -68,9 +68,6 @@
 		-webkit-user-select: none;
 		-ms-user-select: none;
 	}
-	.spacer{
-		flex-grow: 1;
-	}
 	.card {
 		/* border: solid black 0.5px; */
 		position: relative;

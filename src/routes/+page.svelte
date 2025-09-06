@@ -5,7 +5,9 @@
 	<p class="subtitle">a guessing game</p>
 
 	<div class="navButtonDiv">
-		<button class="navButtons">Create Game</button>
+		<a href='/play'>
+			<button class="navButtons">Create Game</button>
+		</a>
 		<button class="navButtons">Join Game</button>
 		<button class="navButtons">Edit Characters</button>
 	</div>

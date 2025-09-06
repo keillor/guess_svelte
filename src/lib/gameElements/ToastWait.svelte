@@ -1,5 +1,5 @@
 <div class="rounded-2xl bg-white p-3 font-bold shadow-2xl outline-4 outline-mint-500">
-	<span class="flex flex-row gap-2">
+	<span class="flex flex-row gap-2 justify-start">
 		<svg
 			class="animate-spin fill-blue-800"
 			xmlns="http://www.w3.org/2000/svg"
@@ -14,6 +14,6 @@
 				class="spinner_z9k8"
 			/></svg
 		>
-		<span>waiting for opponet...</span>
+		<span class='text-lg text-center'>Submitted! Waiting for opponet...</span>
 	</span>
 </div>

@@ -1,8 +1,20 @@
 export class Character {
-    constructor(name: string, url: string) {
-        this.name = name;
-        this.url = new URL(url)
-    }
     name: string;
     url: URL;
+
+    constructor(name: string, url: string | URL) {
+        this.name = name;
+        this.url = typeof url === 'string' ? new URL(url) : url;
+    }
+
+    toJSON() {
+        return {
+            name: this.name,
+            url: this.url.toString(),
+        };
+    }
+
+    static fromJSON(data: any): Character {
+        return new Character(data.name, data.url);
+    }
 }

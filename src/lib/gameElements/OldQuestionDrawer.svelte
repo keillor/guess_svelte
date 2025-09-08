@@ -26,25 +26,30 @@
 			<Drawer.Header>
 				<Drawer.Title>Previously Answered Questions!</Drawer.Title>
 				<Drawer.Description>
-                    <div class='flex flex-col text-lg'>
-						{#key selectedQna}
-						<div class='flex flex-col' transition:slide>
-							<span>#{index + 1}</span>
-							<span>
-								Question: {selectedQna.question}
-							</span>
-							<span>
-								Answer: {selectedQna.answer}
-							</span>
+					{#if qna.length > 0}
+						<div class='flex flex-col text-lg'>
+							{#key selectedQna}
+								<div class='flex flex-col' transition:slide>
+									<span>#{index + 1}</span>
+									<span>
+										Question: {selectedQna.question}
+									</span>
+									<span>
+										Answer: {selectedQna.answer}
+									</span>
+								</div>
+							{/key}
 						</div>
-						{/key}
-                    </div>
-
-                    <div class='grid grid-cols-2'>
-                        <Button type='button' onclick={handleBack} class='w-full bg-blue-600 hover:bg-blue-800 rounded-2xl p-3 text-2xl'>Back</Button>
-                        <Button type='button' onclick={handleNext} class='w-full bg-mint-500 hover:bg-mint-800 rounded-2xl p-3 text-2xl'>Next</Button>
-                    </div>
-
+						<div class='grid grid-cols-2'>
+							<Button type='button' onclick={handleBack} class='w-full bg-blue-600 hover:bg-blue-800 rounded-2xl p-3 text-2xl'>Back</Button>
+							<Button type='button' onclick={handleNext} class='w-full bg-mint-500 hover:bg-mint-800 rounded-2xl p-3 text-2xl'>Next</Button>
+						</div>
+					{:else}
+						<div>
+							<p>No questions yet...</p>
+						</div>
+					{/if}
+					
 				</Drawer.Description>
 			</Drawer.Header>
 			<Drawer.Footer>

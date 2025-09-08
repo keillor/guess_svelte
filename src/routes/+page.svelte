@@ -1,3 +1,7 @@
+<script>
+	import { logout } from "$lib/db/auth.svelte";
+
+</script>
 <main>
 	<div class="logoHolder">
 		<img class="logo" src="/logo.png" alt="Guest Who logo" />
@@ -10,7 +14,9 @@
 		</a>
 		<button class="navButtons">Join Game</button>
 		<button class="navButtons">Edit Characters</button>
+		<button class='navButtons' onclick={logout}>Sign Out</button>
 	</div>
+
 
 	<footer>
 		Made With 💜 by <a class="ghLink" href="https://www.github.com/keillor">KJ</a> -

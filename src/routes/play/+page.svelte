@@ -12,9 +12,6 @@ import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	);
 	let waitingToastId: undefined | string | number = undefined
 
-	/**
-	 * @param {number} index
-	 */
 	function handleFlip(index: number) {
 		flipArray[index] = !flipArray[index];
 		//flipArray = flipArray.map((value, i) => i == index ? !value : value);

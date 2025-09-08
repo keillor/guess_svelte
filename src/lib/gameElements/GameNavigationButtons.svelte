@@ -11,7 +11,7 @@
 	let answerDrawerOpen = $state(false);
 	let oldQUestionDrawerOpen = $state(false);
 	let mostRecentQuestion = $state('Does your character drink matcha?');
-	let qna = $state([new QNA('Does your character drink matcha?', 'Yes'), new QNA('Are they kinda slutty?', 'YES')]);
+	let qna = $state<QNA[]>([]);
 
 	function testAddValue() {
 		qna.push(new QNA('Test question', 'test answer'));
@@ -20,25 +20,25 @@
 </script>
 
 <div class="actionButtonDiv p-4">
-	<button class="actionButton actionButtonPurple" disabled={!activeButtons[0]} tabindex="0">I'm Done</button>
+	<button class="actionButton actionButtonPurple" disabled={activeButtons} tabindex="0">I'm Done</button>
 
-	<AskQuestionDrawer triggerWaitingToast={handleToastWaiting} disabled={!activeButtons[1]}>
+	<AskQuestionDrawer triggerWaitingToast={handleToastWaiting} disabled={activeButtons}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div class="actionButton actionButtonPink" tabindex="0">Ask Question</div>
 	</AskQuestionDrawer>
 
-	<OldQuestionDrawer disabled={!activeButtons[2]} {qna} bind:drawerOpen={oldQUestionDrawerOpen}>
+	<OldQuestionDrawer disabled={activeButtons} {qna} bind:drawerOpen={oldQUestionDrawerOpen}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div class="actionButton actionButtonMint shadow-lg" tabindex="0">Old Questions</div>
 	</OldQuestionDrawer>
 
 
-	<FinalGuessDrawer {characterData} {flipArray} disabled={!activeButtons[3]}>
+	<FinalGuessDrawer {characterData} {flipArray} disabled={activeButtons}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div class="actionButton actionButtonBlue" tabindex="0">Take A Guess</div>
 	</FinalGuessDrawer>
 
-	<AnswerQuestionDrawer disabled={false} bind:drawerOpen={answerDrawerOpen} bind:question={mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
+	<AnswerQuestionDrawer disabled={activeButtons} bind:drawerOpen={answerDrawerOpen} bind:question={mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
 
 	<button hidden use:shortcuts={{ keys: ['a'], type: 'callback', fn: () => {oldQUestionDrawerOpen = !oldQUestionDrawerOpen;}}}>add question and select</button>
 </div>

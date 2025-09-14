@@ -10,7 +10,7 @@ export class Character {
     toJSON() {
         return {
             name: this.name,
-            url: this.url.toString(),
+            url: this.url.href
         };
     }
 

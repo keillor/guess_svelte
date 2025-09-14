@@ -5,42 +5,35 @@
 	import AskQuestionDrawer from './AskQuestionDrawer.svelte';
 	import FinalGuessDrawer from './FinalGuessDrawer.svelte';
 	import OldQuestionDrawer from './OldQuestionDrawer.svelte';
+	import { GuessWhoGame } from '$lib/guessWho.svelte';
+	import type { Character } from '$lib/models/character';
 
-	const { activeButtons, handleToastWaiting, flipArray, characterData, selectedCharacter } = $props();
+	const { GuessWhoInstance, flipArray, characterData, selectedCharacter } : {GuessWhoInstance:GuessWhoGame, flipArray: Array<boolean>, characterData: Character[], selectedCharacter: Character} = $props();
 
 	let answerDrawerOpen = $state(false);
-	let oldQUestionDrawerOpen = $state(false);
 	let mostRecentQuestion = $state('Does your character drink matcha?');
-	let qna = $state<QNA[]>([]);
-
-	function testAddValue() {
-		qna.push(new QNA('Test question', 'test answer'));
-		oldQUestionDrawerOpen = true;
-	}
 </script>
 
 <div class="actionButtonDiv p-4">
-	<button class="actionButton actionButtonPurple" disabled={activeButtons} tabindex="0">I'm Done</button>
+	<button onclick={() => GuessWhoInstance.endTurn()} class="actionButton actionButtonPurple" disabled={GuessWhoInstance.drawerControl.navButtonDisabled.isDone} tabindex="0">I'm Done</button>
 
-	<AskQuestionDrawer triggerWaitingToast={handleToastWaiting} disabled={activeButtons}>
+	<AskQuestionDrawer {GuessWhoInstance} disabled={GuessWhoInstance.drawerControl.navButtonDisabled.askQuestion}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div class="actionButton actionButtonPink" tabindex="0">Ask Question</div>
 	</AskQuestionDrawer>
 
-	<OldQuestionDrawer disabled={activeButtons} {qna} bind:drawerOpen={oldQUestionDrawerOpen}>
+	<OldQuestionDrawer disabled={GuessWhoInstance.drawerControl.navButtonDisabled.oldQuestion} qna={GuessWhoInstance.playerId ? GuessWhoInstance.AQNA : GuessWhoInstance.BQNA} bind:drawerOpen={GuessWhoInstance.drawerControl.oldQUestionDrawerOpen}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-		<div class="actionButton actionButtonMint shadow-lg" tabindex="0">Old Questions</div>
+		<div class="actionButton actionButtonMint shadow-lg" tabindex="0" >Old Questions</div>
 	</OldQuestionDrawer>
 
 
-	<FinalGuessDrawer {characterData} {flipArray} disabled={activeButtons}>
+	<FinalGuessDrawer {characterData} {flipArray} disabled={GuessWhoInstance.drawerControl.navButtonDisabled.takeAGuess}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div class="actionButton actionButtonBlue" tabindex="0">Take A Guess</div>
 	</FinalGuessDrawer>
 
-	<AnswerQuestionDrawer disabled={activeButtons} bind:drawerOpen={answerDrawerOpen} bind:question={mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
-
-	<button hidden use:shortcuts={{ keys: ['a'], type: 'callback', fn: () => {oldQUestionDrawerOpen = !oldQUestionDrawerOpen;}}}>add question and select</button>
+	<AnswerQuestionDrawer bind:drawerOpen={GuessWhoInstance.drawerControl.answerDrawerOpen} bind:question={GuessWhoInstance.drawerControl.mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
 </div>
 
 <style>
@@ -62,7 +55,7 @@
 		padding: 0.5em;
 		font-size: var(--text-3xl);
 		color: var(--color-white);
-		background-color: black;
+		background-color: var(--color-gray-400);
 		--tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
 		box-shadow:
 			var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
@@ -70,7 +63,7 @@
 		transition: all 0.4s;
 		width: 10em;
 	}
-	.actionButton:hover:not([disabled]) {
+	.actionButton:hover:not([data-disabled]) {
 		transform: translate(0.1em, 0.1em);
 		box-shadow: none;
 		transition: all 0.4s;
@@ -87,7 +80,7 @@
 	.actionButtonBlue {
 		background-color: var(--color-blue-400);
 	}
-	.actionButton[disabled] {
+	.actionButton[data-disabled] {
 		background-color: var(--color-gray-400);
 		cursor: not-allowed;
 	}

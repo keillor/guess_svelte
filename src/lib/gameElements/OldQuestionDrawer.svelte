@@ -6,7 +6,6 @@
 	import { slide } from 'svelte/transition';
 	let { qna, disabled, children, drawerOpen = $bindable() }: {qna: QNA[], disabled: boolean, children: any, drawerOpen: any} = $props();
 
-	//let drawerOpen = $state(false);
     let index = $derived(qna.length - 1);
 	let selectedQna = $derived(qna[index]);
     

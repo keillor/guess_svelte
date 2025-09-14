@@ -28,6 +28,7 @@ export class DrawerControl {
                 this.disableAllButtons();
 			} else if (this.GuessWhoInstance.gameState == GameState.ELIMINATING) {
 				// disable 'Ask Question', and 'Final Guess' Buttons
+				this.disableAllButtons();
                 this.navButtonDisabled.isDone = false;
                 this.navButtonDisabled.oldQuestion = false;
 

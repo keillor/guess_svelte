@@ -33,7 +33,7 @@
 		<div class="actionButton actionButtonBlue" tabindex="0">Take A Guess</div>
 	</FinalGuessDrawer>
 
-	<AnswerQuestionDrawer bind:drawerOpen={GuessWhoInstance.drawerControl.answerDrawerOpen} bind:question={GuessWhoInstance.drawerControl.mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
+	<AnswerQuestionDrawer {GuessWhoInstance} bind:drawerOpen={GuessWhoInstance.drawerControl.answerDrawerOpen} bind:question={GuessWhoInstance.drawerControl.mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
 </div>
 
 <style>

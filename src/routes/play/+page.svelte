@@ -2,31 +2,19 @@
 import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	import GameNavigationButtons from '$lib/gameElements/GameNavigationButtons.svelte';
 	import Sidebar from '$lib/gameElements/Sidebar.svelte';
-	import ToastWait from '$lib/gameElements/ToastWait.svelte';
 	import { GuessWhoGame, playerId } from '$lib/guessWho.svelte';
 	import { Character } from '$lib/models/character';
 	import { onDestroy } from 'svelte';
 	import { shortcuts } from 'svelte-keyboard-shortcuts';
-	import { toast } from 'svelte-sonner';
 	let GuessWhoInstance = $state(new GuessWhoGame('myGame', '', true, playerId.playerA));
 	let flipArray = $state(Array(24).fill(true));
 	let remaining = $derived(
 		flipArray.reduce((accumulator, value) => accumulator + (value ? 1 : 0), 0)
 	);
-	let waitingToastId: undefined | string | number = undefined
 3
 	function handleFlip(index: number) {
 		flipArray[index] = !flipArray[index];
 		//flipArray = flipArray.map((value, i) => i == index ? !value : value);
-	}
-
-	function handleQuestionSubmit() {
-		if(waitingToastId == undefined) {
-			waitingToastId = toast.custom(ToastWait, {
-				duration: Number.POSITIVE_INFINITY,
-				dismissable: false,
-			});
-		}
 	}
 	const exampleImg = 'https://images.pexels.com/photos/3789888/pexels-photo-3789888.jpeg';
 	const dummyCharacter = new Character('Elizabeth', exampleImg);
@@ -52,19 +40,11 @@ import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 		for(let i = 0; i < flipArray.length; i++) {
 			flipArray[i] = false;
 		}
-		if(waitingToastId == undefined) {
-			waitingToastId = toast.custom(ToastWait, {
-				duration: Number.POSITIVE_INFINITY,
-				dismissable: false,
-			});
-		}
 	}}} hidden>Flip All Up!</button>
 	<button class='items-center' use:shortcuts={{ keys: ['u'], type: 'callback', fn: () => {
 		for(let i = 0; i < flipArray.length; i++) {
 			flipArray[i] = true;
 		}
-		toast.dismiss(waitingToastId);
-		waitingToastId = undefined;
 	}}} hidden>Flip All Down!</button>
 </div>
 

@@ -1,5 +1,7 @@
 import { GuessWhoGame, playerId } from '$lib/guessWho.svelte';
+import { toast } from 'svelte-sonner';
 import { GameState } from './gameState';
+import ToastWait from '$lib/gameElements/ToastWait.svelte';
 
 export class DrawerControl {
 	GuessWhoInstance: GuessWhoGame;
@@ -12,13 +14,54 @@ export class DrawerControl {
 		oldQuestion: boolean;
 		takeAGuess: boolean;
 	}>({ isDone: false, askQuestion: false, oldQuestion: false, takeAGuess: false });
+	//toast notifications that cannot be swiped away.
+	yourTurnToast : string | number;
+	awaitAnswerToast : string | number;
 
 	constructor(GuessWhoInstance: GuessWhoGame) {
 		this.GuessWhoInstance = GuessWhoInstance;
+		this.yourTurnToast = '';
+		this.awaitAnswerToast = '';
+	}
+
+	handleAwaitAnswerToast() {
+		this.awaitAnswerToast = toast.custom(ToastWait, {
+				componentProps: {
+					message: "Submitted! Waiting for opponet...",
+					loading: true,
+				},
+				duration: Number.POSITIVE_INFINITY,
+				dismissable: false,
+			});
+	}
+	dismissAwaitAnswerToast() {
+		toast.dismiss(this.awaitAnswerToast);
+		this.awaitAnswerToast = '';
+	}
+	
+	awaitYourTurn() {
+		this.yourTurnToast = toast.custom(ToastWait, {
+				componentProps: {
+					message: "Waiting for your turn...",
+					loading: true,
+					dismissButton: true,
+				},
+				duration: Number.POSITIVE_INFINITY,
+				dismissable: true,
+			});
+	}
+
+	dismissAwaitYourTurnToast() {
+		console.log(this.yourTurnToast);
+		toast.dismiss(this.yourTurnToast);
+		this.yourTurnToast = '';
 	}
 	update() {
 		if (this.GuessWhoInstance.isYourTurn()) {
 			// IT IS YOUR TURN
+			if(this.yourTurnToast) {
+				this.dismissAwaitYourTurnToast();
+			}
 			if (this.GuessWhoInstance.gameState == GameState.ASKING) {
 				// enable all buttons.
                 this.enableAllButtons();
@@ -26,8 +69,10 @@ export class DrawerControl {
 				//  TODO: show waiting indicator on toast (waiting for player to answer)
 				//  disable all buttons
                 this.disableAllButtons();
+				this.handleAwaitAnswerToast();
 			} else if (this.GuessWhoInstance.gameState == GameState.ELIMINATING) {
 				// disable 'Ask Question', and 'Final Guess' Buttons
+				this.dismissAwaitAnswerToast();
 				this.disableAllButtons();
                 this.navButtonDisabled.isDone = false;
                 this.navButtonDisabled.oldQuestion = false;
@@ -39,6 +84,9 @@ export class DrawerControl {
                 this.disableAllButtons();
 			}
 		} else {
+			if(this.yourTurnToast == '') {
+				this.awaitYourTurn();
+			}
 			// IT IS YOUR OPPONETS TURN
 			// make sure all buttons are disabled.
             this.disableAllButtons();

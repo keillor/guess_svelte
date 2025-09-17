@@ -6,6 +6,7 @@ import { doc, getDoc, setDoc, onSnapshot, FirestoreError } from 'firebase/firest
 import { GameState } from "./models/gameState";
 import { DrawerControl } from "./models/drawerControl.svelte";
 import type { FirebaseError } from "firebase/app";
+import ToastError from "./gameElements/ToastError.svelte";
 
 export enum playerId {
     playerA = 0,
@@ -57,10 +58,19 @@ export class GuessWhoGame {
         this.BCharacter = BCharacter;
     }
 
-    endTurn() {
+    async endTurn() {
         this.isATurn = !this.isATurn;
         this.gameState = GameState.ASKING;
-        this.saveToFirestore();
+        try {
+            await this.saveToFirestore();
+        } catch {
+            toast.custom(ToastError, {
+                componentProps: {
+                    loading: false,
+                    message: "Error ending turn! Please try again...",
+                }
+            })
+        }
     }
 
     toJSON() {
@@ -97,13 +107,9 @@ export class GuessWhoGame {
     }
 
     async saveToFirestore() {
-        try {
-            await setDoc(doc(db, 'games', this.gameId), this.toJSON());
-            return true;
-        } catch (e) {
-            console.log(e.code);
-            return false;
-        }
+        throw Error('test: firebase failed...');
+        await setDoc(doc(db, 'games', this.gameId), this.toJSON());
+        return true;
     }
 
     static async loadFromFirestore(gameId: string) {
@@ -148,7 +154,7 @@ export class GuessWhoGame {
         this.gameState = GameState.AWAITANSWER;
 
         try {
-            this.saveToFirestore();
+            await this.saveToFirestore();
         } catch (e) {
             console.log(e);
             return {message: 'Something went wrong! Please try again.'};
@@ -169,11 +175,11 @@ export class GuessWhoGame {
         }
         try {
             this.gameState = GameState.ELIMINATING;
-            this.saveToFirestore();
+            await this.saveToFirestore();
             return true;
         } catch (e) {
             console.log(e);
-            return {message: 'Something went wrong! Please try again.'}
+            return {message: 'Something went wrong! Please try again.'};
         }
     }
 
@@ -187,9 +193,14 @@ export class GuessWhoGame {
             //player guessed incorrectly.
             this.winner = this.playerId == playerId.playerA ? playerId.playerB : playerId.playerA;
             this.gameState = GameState.END;
-            this.saveToFirestore();
+            try {
+                await this.saveToFirestore();
+            } catch (e) {
+                console.log(e);
+                return {message: 'Something went wrong! Please try again.'};
+            }
         }
-        return;
+        return true;
     }
 
     isYourTurn() {

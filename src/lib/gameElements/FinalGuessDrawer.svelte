@@ -20,6 +20,7 @@
 	} = $props();
 	let drawerOpen = $state(false);
 	let scrollRef: HTMLDivElement | any = null;
+	let message = $state<string>('');
 	const scrollAmount: number = 160;
 
 	let selectedCharacter = $state<Character | null>(null);
@@ -68,12 +69,20 @@
 						onsubmit={async (e: SubmitEvent) => {
 							e.preventDefault();
 							if (selectedCharacter != null) {
-								await GuessWhoInstance.takeAGuess(selectedCharacter);
+								const result = await GuessWhoInstance.takeAGuess(selectedCharacter);
+								if(result != true) {
+									message = result.message;
+									return;
+								}
+								message = '';
 								drawerOpen = false;
 							}
 						}}
 						class="flex flex-col gap-2"
 					>
+						{#if message.length > 0}
+							<p class='text-red-500'>{message}</p>
+						{/if}
 						{#if filteredCharacter.length == 0}
 							<div>
 								<p>Looks like you eliminated too many characters!</p>

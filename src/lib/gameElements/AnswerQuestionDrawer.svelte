@@ -8,7 +8,8 @@
 	import type { GuessWhoGame } from '$lib/guessWho.svelte';
 	import type { Character } from '$lib/models/character';
 	let { children, GuessWhoInstance, character, drawerOpen = $bindable(), question = $bindable()}: {children: any, GuessWhoInstance: GuessWhoGame, character: Character, drawerOpen: boolean, question: string} = $props();
-	let answerText = $state();
+	let answerText = $state<string>('');
+	let message = $state('');
 </script>
 
 <div hidden use:shortcuts={{ keys: ['q'], type: 'callback', fn: () => {drawerOpen = !drawerOpen;}}}></div>
@@ -21,9 +22,25 @@
 				<Drawer.Description>
 					<form
                     method="dialog"
-                    onsubmit={(e) => {
+                    onsubmit={async (e) => {
                         e.preventDefault();
-						console.log(e.submitter);
+						const buttonValue = e.submitter?.getAttribute('id');
+						let result = null;
+						if(buttonValue == null) {
+							//user submitted a text response.
+							result = await GuessWhoInstance.answerQuestion(answerText);
+						} else {
+							// the user clicked a default response.
+							result = await GuessWhoInstance.answerQuestion(buttonValue);
+						}
+						if(result != true) {
+								message = result.message;
+								return;
+						} else {
+							drawerOpen = false;
+							answerText = '';
+							message = '';
+						}
                         drawerOpen = false;
                     }}
 						class='flex flex-col gap-2'
@@ -34,6 +51,10 @@
                         <div>
                             <FlippableCard character={character} handleFlip={() => {null}} flipped={true} index={0}/>
                         </div>
+						{#if message != ''}
+							<p>{message}</p>
+						{/if}
+						<p></p>
 						<Label for='custom'>Custom Reponse</Label>
 						<Input id='custom' bind:value={answerText} name='custom' type='text' class='w-full outline-pink-500 active:ring-mint-800 rounded-2xl p-3 text-2xl'/>
 						<Button id='yes' type='submit' class='w-full bg-mint-500 hover:bg-mint-800 rounded-2xl p-3 text-2xl'>Yes</Button>

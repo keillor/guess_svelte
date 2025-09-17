@@ -15,22 +15,22 @@
 </script>
 
 <div class="actionButtonDiv p-4">
-	<button onclick={() => GuessWhoInstance.endTurn()} class="actionButton actionButtonPurple" disabled={GuessWhoInstance.drawerControl.navButtonDisabled.isDone} tabindex="0">I'm Done</button>
+	<button onclick={() => GuessWhoInstance.endTurn()} class={`actionButton ${GuessWhoInstance.drawerControl.navButtonDisabled.isDone ? 'actionButtonGray' : 'actionButtonPurple'}`} disabled={GuessWhoInstance.drawerControl.navButtonDisabled.isDone} tabindex="0">I'm Done</button>
 
 	<AskQuestionDrawer {GuessWhoInstance} disabled={GuessWhoInstance.drawerControl.navButtonDisabled.askQuestion}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-		<div class="actionButton actionButtonPink" tabindex="0">Ask Question</div>
+		<div class={`actionButton ${GuessWhoInstance.drawerControl.navButtonDisabled.askQuestion ? 'actionButtonGray' : 'actionButtonPink'}`} tabindex="0">Ask Question</div>
 	</AskQuestionDrawer>
 
 	<OldQuestionDrawer disabled={GuessWhoInstance.drawerControl.navButtonDisabled.oldQuestion} qna={GuessWhoInstance.playerId ? GuessWhoInstance.AQNA : GuessWhoInstance.BQNA} bind:drawerOpen={GuessWhoInstance.drawerControl.oldQUestionDrawerOpen}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-		<div class="actionButton actionButtonMint shadow-lg" tabindex="0" >Old Questions</div>
+		<div class={`actionButton shadow-lg ${GuessWhoInstance.drawerControl.navButtonDisabled.oldQuestion ? 'actionButtonGray' : 'actionButtonMint'}`} tabindex="0" >Old Questions</div>
 	</OldQuestionDrawer>
 
 
-	<FinalGuessDrawer {characterData} {flipArray} disabled={GuessWhoInstance.drawerControl.navButtonDisabled.takeAGuess}>
+	<FinalGuessDrawer {GuessWhoInstance} {characterData} {flipArray} disabled={GuessWhoInstance.drawerControl.navButtonDisabled.takeAGuess}>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-		<div class="actionButton actionButtonBlue" tabindex="0">Take A Guess</div>
+		<div class={`actionButton ${GuessWhoInstance.drawerControl.navButtonDisabled.takeAGuess ? 'actionButtonGray' : 'actionButtonBlue'}`} tabindex="0">Take A Guess</div>
 	</FinalGuessDrawer>
 
 	<AnswerQuestionDrawer {GuessWhoInstance} bind:drawerOpen={GuessWhoInstance.drawerControl.answerDrawerOpen} bind:question={GuessWhoInstance.drawerControl.mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
@@ -80,7 +80,7 @@
 	.actionButtonBlue {
 		background-color: var(--color-blue-400);
 	}
-	.actionButton[data-disabled] {
+	.actionButtonGray {
 		background-color: var(--color-gray-400);
 		cursor: not-allowed;
 	}

@@ -2,9 +2,10 @@ import { toast } from "svelte-sonner";
 import { db } from "./db/firebaseInit";
 import { Character } from "./models/character";
 import { QNA } from "./models/question";
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, FirestoreError } from 'firebase/firestore';
 import { GameState } from "./models/gameState";
 import { DrawerControl } from "./models/drawerControl.svelte";
+import type { FirebaseError } from "firebase/app";
 
 export enum playerId {
     playerA = 0,
@@ -21,11 +22,10 @@ export class GuessWhoGame {
     // and the isATurn boolean.
     gameState: GameState;
     isATurn: boolean;
+    winner: playerId | null;
 
     // ***player game data***
     playerId: playerId;
-    finalGuessTriggered: boolean = $state(false);
-    playerTriggeredFinalGuess: playerId | null = $state(null);
     ACharacter: Character | null = $state(null);
     BCharacter: Character | null = $state(null);
     // Questions about 'A's characters (B asked the questions...)
@@ -33,6 +33,7 @@ export class GuessWhoGame {
     // Questions about 'B's characters (A asked the questions...)
     BQNA: QNA[] = $state([]);
     drawerControl : DrawerControl = new DrawerControl(this);
+    players: string[];
 
     constructor(gameId: string, characterSetId: string, isATurn: boolean, playerId: playerId) {
         this.gameId = gameId;
@@ -41,6 +42,8 @@ export class GuessWhoGame {
         this.#unsubscribe = this.subscribeToFirestoreUpdates();
         this.isATurn = $state(isATurn);
         this.gameState = GameState.ASKING;
+        this.winner = null;
+        this.players = [];
     }
 
     destroy() {
@@ -66,13 +69,13 @@ export class GuessWhoGame {
             characterSetId: this.characterSetId,
             playerId: this.playerId,
             isATurn: this.isATurn,
+            winner: this.winner,
             gameState: this.gameState,
-            finalGuessTriggered: this.finalGuessTriggered,
-            playerTriggeredFinalGuess: this.playerTriggeredFinalGuess,
             ACharacter: this.ACharacter !== null ? this.ACharacter.toJSON() : null,
             BCharacter: this.BCharacter !== null ? this.BCharacter.toJSON() : null,
             AQNA: this.AQNA.map(q => q.toJSON()),
             BQNA: this.BQNA.map(q => q.toJSON()),
+            players: this.players
         };
     }
 
@@ -83,21 +86,23 @@ export class GuessWhoGame {
             data.isATurn,
             data.playerId ? 0 : 1
         );
-        game.finalGuessTriggered = data.finalGuessTriggered;
-        game.playerTriggeredFinalGuess = data.playerTriggeredFinalGuess;
+        game.winner = data.winner;
+        game.gameState = data.gameState;
         game.ACharacter = data.ACharacter ? Character.fromJSON(data.ACharacter) : null;
         game.BCharacter = data.BCharacter ? Character.fromJSON(data.BCharacter) : null;
         game.AQNA = (data.AQNA || []).map((q: any) => QNA.fromJSON(q));
         game.BQNA = (data.BQNA || []).map((q: any) => QNA.fromJSON(q));
+        game.players = data.players;
         return game;
     }
 
     async saveToFirestore() {
         try {
             await setDoc(doc(db, 'games', this.gameId), this.toJSON());
-        } catch(e) {
-            console.log(e);
-            toast.error('Error! View console...');
+            return true;
+        } catch (e) {
+            console.log(e.code);
+            return false;
         }
     }
 
@@ -114,13 +119,13 @@ export class GuessWhoGame {
             if (snap.exists()) {
                 const data = snap.data();
                 this.isATurn = data.isATurn;
+                this.winner = data.winner;
                 this.gameState = data.gameState
-                this.finalGuessTriggered = data.finalGuessTriggered;
-                this.playerTriggeredFinalGuess = data.playerTriggeredFinalGuess;
                 this.ACharacter = data.ACharacter ? Character.fromJSON(data.ACharacter) : null;
                 this.BCharacter = data.BCharacter ? Character.fromJSON(data.BCharacter) : null;
                 this.AQNA = (data.AQNA || []).map((q: any) => QNA.fromJSON(q));
                 this.BQNA = (data.BQNA || []).map((q: any) => QNA.fromJSON(q));
+                this.players = data.players;
             }
             this.drawerControl.update();
         });
@@ -149,6 +154,42 @@ export class GuessWhoGame {
             return {message: 'Something went wrong! Please try again.'};
         }
         return true;
+    }
+
+    async answerQuestion(answerText: string) {
+        const answer = answerText.trim();
+        const regex = /(.|\s)*\S(.|\s)*/;
+        if(!regex.test(answer)) {
+            return {message: 'Question must not be empty'};
+        }
+        if(this.playerId === playerId.playerA) {
+            this.BQNA[this.BQNA.length - 1].answer = answer;
+        } else {
+            this.AQNA[this.AQNA.length - 1].answer = answer;
+        }
+        try {
+            this.gameState = GameState.ELIMINATING;
+            this.saveToFirestore();
+            return true;
+        } catch (e) {
+            console.log(e);
+            return {message: 'Something went wrong! Please try again.'}
+        }
+    }
+
+    async takeAGuess(character: Character) {
+            //player guessed correctly.
+        if(character == (this.playerId == playerId.playerA ? this.BCharacter : this.ACharacter)) {
+            this.winner = this.playerId == playerId.playerA ? playerId.playerA : playerId.playerB;
+            this.gameState = GameState.END;
+            this.saveToFirestore();
+        } else {
+            //player guessed incorrectly.
+            this.winner = this.playerId == playerId.playerA ? playerId.playerB : playerId.playerA;
+            this.gameState = GameState.END;
+            this.saveToFirestore();
+        }
+        return;
     }
 
     isYourTurn() {

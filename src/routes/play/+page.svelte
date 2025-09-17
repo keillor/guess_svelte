@@ -14,7 +14,7 @@ import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 		flipArray.reduce((accumulator, value) => accumulator + (value ? 1 : 0), 0)
 	);
 	let waitingToastId: undefined | string | number = undefined
-
+3
 	function handleFlip(index: number) {
 		flipArray[index] = !flipArray[index];
 		//flipArray = flipArray.map((value, i) => i == index ? !value : value);

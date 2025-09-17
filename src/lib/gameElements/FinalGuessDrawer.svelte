@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
-	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
+	import type { GuessWhoGame } from '$lib/guessWho.svelte';
 	import type { Character } from '$lib/models/character';
-	import { toast } from 'svelte-sonner';
 	const {
+		GuessWhoInstance,
 		flipArray,
 		characterData,
 		disabled,
 		children
 	}: {
+		GuessWhoInstance: GuessWhoGame;
 		flipArray: Array<boolean>;
 		characterData: Array<Character>;
 		disabled: boolean | null | undefined;
@@ -22,7 +22,9 @@
 	let scrollRef: HTMLDivElement | any = null;
 	const scrollAmount: number = 160;
 
-	let selectedCharacter = $state<Character | undefined>();
+	let selectedCharacter = $state<Character | null>(null);
+
+	let filteredCharacter = $derived(characterData.filter((c, index) => flipArray.at(index)));
 
 	function handleLeft() {
 		if (scrollRef) {
@@ -49,7 +51,7 @@
 		if (selectedCharacter != newCharacter) {
 			selectedCharacter = newCharacter;
 		} else {
-			selectedCharacter = undefined;
+			selectedCharacter = null;
 		}
 	}
 </script>
@@ -62,56 +64,52 @@
 				<Drawer.Title>Did You Guess Who?</Drawer.Title>
 				<Drawer.Description>
 					<form
-						method="post"
-						use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-							// `formElement` is this `<form>` element
-							// `formData` is its `FormData` object that's about to be submitted
-							// `action` is the URL to which the form is posted
-							// calling `cancel()` will prevent the submission
-							// `submitter` is the `HTMLElement` that caused the form to be submitted
-
-							if (selectedCharacter == null) {
-								cancel();
-								return;
+						method='dialog'
+						onsubmit={async (e: SubmitEvent) => {
+							e.preventDefault();
+							if (selectedCharacter != null) {
+								await GuessWhoInstance.takeAGuess(selectedCharacter);
+								drawerOpen = false;
 							}
-
-							drawerOpen = false;
-							
-							return async ({ result, update }) => {
-								// `result` is an `ActionResult` object
-								// `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-							};
 						}}
 						class="flex flex-col gap-2"
 					>
-						<Label for="question" class="font-bold">Question</Label>
-						<ScrollArea orientation="horizontal" bind:ref={scrollRef}>
-							<div class="flex h-40 flex-row gap-4 p-2">
-								{#each characterData as character}
-									<button
-										type="button"
-										onclick={() => handleCharacterTap(character)}
-										class={`scrollSnapItem w-40 rounded-lg p-2 outline-1 transition-all ${character == selectedCharacter ? 'bg-blue-600 text-white' : ''}`}
-									>
-										<div class="flex flex-row justify-center">
-											<img class="characterImage" src={character.url.href} alt={character.name} />
-										</div>
-										<span class="text-center">
-											{character.name}
-										</span>
-									</button>
-								{/each}
+						{#if filteredCharacter.length == 0}
+							<div>
+								<p>Looks like you eliminated too many characters!</p>
+								<p>Uneliminate a few and come back here...</p>
 							</div>
-						</ScrollArea>
-						<div class="flex flex-row justify-around">
-							<button type="button" onclick={handleLeft}>◀</button>
-							<button type="button" onclick={handleRight}>▶</button>
-						</div>
-						<Button
-							type="submit"
-							disabled={selectedCharacter === undefined}
-							class="w-full rounded-2xl bg-blue-600 p-3 text-2xl hover:bg-blue-800 disabled:bg-gray-400">Submit</Button
-						>
+						{:else}
+							<Label for="question" class="font-bold">Question</Label>
+							<ScrollArea orientation="horizontal" bind:ref={scrollRef}>
+								<div class="flex h-40 flex-row gap-4 p-2">
+									{#each filteredCharacter as character}
+										<button
+											type="button"
+											onclick={() => handleCharacterTap(character)}
+											class={`scrollSnapItem w-40 rounded-lg p-2 outline-1 transition-all ${character == selectedCharacter ? 'bg-blue-600 text-white' : ''}`}
+										>
+											<div class="flex flex-row justify-center">
+												<img class="characterImage" src={character.url.href} alt={character.name} />
+											</div>
+											<span class="text-center">
+												{character.name}
+											</span>
+										</button>
+									{/each}
+								</div>
+							</ScrollArea>
+							<div class="flex flex-row justify-around">
+								<button type="button" onclick={handleLeft}>◀</button>
+								<button type="button" onclick={handleRight}>▶</button>
+							</div>
+							{/if}
+							<Button
+								type="submit"
+								disabled={selectedCharacter === null}
+								class="w-full rounded-2xl bg-blue-600 p-3 text-2xl hover:bg-blue-800 disabled:bg-gray-400"
+								>Submit</Button
+							>
 					</form>
 				</Drawer.Description>
 			</Drawer.Header>

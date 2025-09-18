@@ -13,7 +13,7 @@
 </script>
 
 <div hidden use:shortcuts={{ keys: ['q'], type: 'callback', fn: () => {drawerOpen = !drawerOpen;}}}></div>
-<Drawer.Root bind:open={drawerOpen} dismissible={false}>
+<Drawer.Root bind:open={drawerOpen} dismissible={false} onClose={() => {message = '';}}>
 	<Drawer.Trigger hidden>{@render children()}</Drawer.Trigger>
 	<Drawer.Content >
 		<div class="mx-auto w-full max-w-full sm:max-w-sm md:max-w-md">
@@ -52,7 +52,7 @@
                             <FlippableCard character={character} handleFlip={() => {null}} flipped={true} index={0}/>
                         </div>
 						{#if message != ''}
-							<p>{message}</p>
+							<p class='text-red-500'>{message}</p>
 						{/if}
 						<p></p>
 						<Label for='custom'>Custom Reponse</Label>

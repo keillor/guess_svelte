@@ -107,7 +107,6 @@ export class GuessWhoGame {
     }
 
     async saveToFirestore() {
-        throw Error('test: firebase failed...');
         await setDoc(doc(db, 'games', this.gameId), this.toJSON());
         return true;
     }

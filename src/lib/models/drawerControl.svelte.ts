@@ -52,7 +52,6 @@ export class DrawerControl {
 	}
 
 	dismissAwaitYourTurnToast() {
-		console.log(this.yourTurnToast);
 		toast.dismiss(this.yourTurnToast);
 		this.yourTurnToast = '';
 	}

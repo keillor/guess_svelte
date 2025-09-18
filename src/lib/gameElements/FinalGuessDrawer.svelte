@@ -57,7 +57,7 @@
 	}
 </script>
 
-<Drawer.Root bind:open={drawerOpen}>
+<Drawer.Root bind:open={drawerOpen} onClose={() => {selectedCharacter = null;}}>
 	<Drawer.Trigger {disabled}>{@render children()}</Drawer.Trigger>
 	<Drawer.Content>
 		<div class="mx-auto w-full max-w-full sm:max-w-sm md:max-w-md">

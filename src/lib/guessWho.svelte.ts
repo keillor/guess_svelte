@@ -5,7 +5,6 @@ import { QNA } from "./models/question";
 import { doc, getDoc, setDoc, onSnapshot, FirestoreError } from 'firebase/firestore';
 import { GameState } from "./models/gameState";
 import { DrawerControl } from "./models/drawerControl.svelte";
-import type { FirebaseError } from "firebase/app";
 import ToastError from "./gameElements/ToastError.svelte";
 
 export enum playerId {

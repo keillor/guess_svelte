@@ -13,7 +13,9 @@
 			<button class="navButtons">Create Game</button>
 		</a>
 		<button class="navButtons">Join Game</button>
-		<button class="navButtons">Edit Characters</button>
+		<a href='/create'>
+			<button class="navButtons">Edit Characters</button>
+		</a>
 		<button class='navButtons' onclick={logout}>Sign Out</button>
 	</div>
 

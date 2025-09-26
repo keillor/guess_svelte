@@ -10,7 +10,21 @@
 		index: number
 	} = $props();
 
-	let isDuplicate: boolean = $state(false);
+	let isDuplicate: boolean = $derived.by(() => {
+		let newName = characterData[index].name
+		if(newName === '') return false;
+		for(let character of characterData) {
+			if(character == characterData[index]) {
+				continue;
+			}
+			if(character.name == newName) {
+				//isDuplicate = true;
+				return true;
+			}
+		}
+		//isDuplicate = false;
+		return false;
+	})
 
 
 	async function handlePaste() {
@@ -20,40 +34,6 @@
 			characterData[index].url = new URL(result);
 		}
 	}
-	
-	function handleIsDuplicate() {
-		let newName = characterData[index].name
-		for(let character of characterData) {
-			if(character == characterData[index]) {
-				continue;
-			}
-			if(character.name == newName) {
-				isDuplicate = true;
-				return true;
-			}
-		}
-		isDuplicate = false;
-		return false;
-	}
-
-	$effect(() => {
-		let newName = characterData[index].name
-		if(newName == '') {
-			isDuplicate = false;
-			return;
-		}
-		for(let character of characterData) {
-			if(character == characterData[index]) {
-				continue;
-			}
-			if(character.name == newName) {
-				isDuplicate = true;
-				return;
-			}
-		}
-		isDuplicate = false;
-		return;
-	})
 </script>
 
 <div class="card" style:--bg-1="var(--color-white)">
@@ -70,6 +50,7 @@
 					bind:value={characterData[index].name}
 					class={`w-full pr-8 ${isDuplicate ? 'border-red-500' : ''}`}
 					aria-invalid={isDuplicate}
+					onfocusout={() => characterData[index].name = characterData[index].name.trim()}
 				/>
 				{#if isDuplicate}
 					<Tooltip.Provider delayDuration={100}>

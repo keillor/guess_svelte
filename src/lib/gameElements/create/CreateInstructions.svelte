@@ -4,6 +4,8 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { createInstructionsVisible } from '$lib/stores/userPrefs.svelte';
+	import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
+
 
 	function handleCheckChange(checkValue: boolean) {
 		if (checkValue) {
@@ -14,31 +16,35 @@
 	}
 </script>
 
-<Drawer.Root open={$createInstructionsVisible === 'true' ? true : false}>
-	<Drawer.Trigger
+<AlertDialog.Root open={$createInstructionsVisible === 'true' ? true : false}>
+	<AlertDialog.Trigger
 		class="w-full rounded-sm bg-mint-500 outline-1 transition-colors hover:bg-mint-800 hover:text-white"
-		>Instructions</Drawer.Trigger
+		>Instructions</AlertDialog.Trigger
 	>
-	<Drawer.Content>
-		<Drawer.Header>
-			<Drawer.Title class="mb-6 rounded-2xl bg-mint-500 p-3 text-center text-3xl font-bold"
-				>How to Create Your Character Set ✨</Drawer.Title
+	<ScrollArea>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title class="mb-6 rounded-2xl bg-mint-500 p-3 text-center text-xl font-bold"
+				>How to Create Your Character Set ✨</AlertDialog.Title
 			>
-			<Drawer.Description class="mb-6 text-lg leading-relaxed">
-				Welcome! Use this page to build a unique set of 24 characters. Follow these simple steps to
-				get started: 😉</Drawer.Description
-			>
-			<ScrollArea>
-				<div>
+				<div class='p-3'>
 					<div class="flex items-start gap-3">
 						<Checkbox
+						type='button'
 							id="showInstructions"
 							onCheckedChange={(value) => handleCheckChange(value)}
+							onchange={((e) => e.preventDefault())}
+							onsubmit={(e) => e.preventDefault()}
 							checked={$createInstructionsVisible == 'true' ? true : false}
 						/>
 						<Label for="showInstructions">Show instructions next time</Label>
 					</div>
-					<div>
+					<ol class='list-decimal'>
+						<li>Provide each character with a unique names. Duplicate names will indiciate an error.</li>
+						<li>Click each characters paste button to paste an image url. If the image is online somewhere else use the 'copy image url' option when right clicking</li>
+						<li>When you are ready, name your set and click save.</li>
+					</ol>
+<!-- 					<div>
 						<div class="space-y-6">
 							<h2 class="rounded-2xl bg-purple-500 text-2xl font-semibold">
 								1. Name Your Character Set 💅
@@ -85,12 +91,12 @@
 							names must be unique and all characters must have an image that is not the default one.
 							💅
 						</p>
-					</div>
+					</div> -->
 				</div>
-			</ScrollArea>
-		</Drawer.Header>
-		<Drawer.Footer>
-			<Drawer.Close>Close</Drawer.Close>
-		</Drawer.Footer>
-	</Drawer.Content>
-</Drawer.Root>
+			</AlertDialog.Header>
+			<AlertDialog.Footer>
+				<AlertDialog.Cancel type='button'>Close</AlertDialog.Cancel>
+			</AlertDialog.Footer>
+		</AlertDialog.Content>
+	</ScrollArea>
+</AlertDialog.Root>

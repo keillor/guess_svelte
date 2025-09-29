@@ -38,11 +38,15 @@
 
 <div class="card" style:--bg-1="var(--color-white)">
 	<div class="flex flex-col gap-2">
+		{#if characterData[index].url.host != 'localhost'}
 		<img
 			class="characterImage self-center"
 			src={characterData[index].url.href}
 			alt={`character ${characterData[index].name}`}
 		/>
+		{:else}
+		TODO: add placeholder img
+		{/if}
 		<span class="characterName">
 			<div class="relative flex items-center w-full">
 				<!-- onkeyup={() => handleIsDuplicate()} -->
@@ -68,7 +72,7 @@
 		<button
 			onclick={handlePaste}
 			class="w-full rounded-sm bg-purple-500 text-sm outline-1 transition-colors hover:bg-purple-800 hover:text-white"
-			>Paste Image Link</button
+			>Paste</button
 		>
 	</div>
 </div>

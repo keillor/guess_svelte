@@ -1,6 +1,7 @@
 <script lang='ts'>
 	import Input from "$lib/components/ui/input/input.svelte";
 	import Label from "$lib/components/ui/label/label.svelte";
+	import CreateInstructions from "$lib/gameElements/create/CreateInstructions.svelte";
 	import EditableCard from "$lib/gameElements/editableCard.svelte";
 	import ToastWait from "$lib/gameElements/ToastWait.svelte";
 	import { CreateCharacter } from "$lib/models/CreateCharacter.svelte";
@@ -13,7 +14,7 @@
     let characterData = $state<CreateCharacter[]>([]);
 
     for(let i = 0; i < 24; i++) {
-        characterData.push(new CreateCharacter('', 'https://images.pexels.com/photos/4016579/pexels-photo-4016579.jpeg'));
+        characterData.push(new CreateCharacter('', 'http://localhost'));
     }
 
 	function handleSubmit(e: SubmitEvent, setName: string, characterData: CreateCharacter[]) {
@@ -62,6 +63,7 @@
 		<button disabled={submitted} class='outline-1 rounded-sm w-full bg-pink-300 hover:bg-pink-500 hover:text-white transition-colors disabled:bg-gray-500'>Save</button>
 	</div>
 </form>
+<CreateInstructions />
 
 <div class='flippableContainer'>
     {#each characterData as _, index}

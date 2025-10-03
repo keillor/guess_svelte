@@ -5,7 +5,6 @@
 	import { CharacterSet } from "$lib/models/CharacterSet.svelte";
 	import { CreateCharacter } from "$lib/models/CreateCharacter.svelte";
 	import { generateName } from "$lib/utils/randomName";
-
     let rawCharacters : CreateCharacter[] = [];
 
     for(let i = 0; i < 24; i++) {

@@ -5,7 +5,7 @@ import { user } from "$lib/db/auth.svelte";
 import { toast } from "svelte-sonner";
 import ToastWait from "$lib/gameElements/ToastWait.svelte";
 import ToastError from "$lib/gameElements/ToastError.svelte";
-import { redirect } from "@sveltejs/kit";
+import { goto } from "$app/navigation";
 
 export class CharacterSet {
     characters: Character[];
@@ -129,6 +129,14 @@ export class CharacterSet {
             return;
         }
 		// if checks pass, we can attempt to save to firebase.
-        //redirect(303, '/play')
+        toast.dismiss(this.submitted);
+        toast.custom(ToastWait, {
+            componentProps: {
+                message: "Set Saved!",
+                loading: false
+            }
+        })
+        this.submitted = '';
+        goto(`./set/${docId}`)
 	}
 }

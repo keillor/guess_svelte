@@ -72,11 +72,12 @@
 				{#if isDuplicate}
 					<Tooltip.Provider delayDuration={100}>
 						<Tooltip.Root>
-							<Tooltip.Trigger
+							<!-- NOTE: the disabled boolean makes the object selectable with tab only once. -->
+							<Tooltip.Trigger tabindex={-1} disabled={true}
 								class="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer border-none bg-transparent p-0 text-xl"
 								>❌</Tooltip.Trigger
 							>
-							<Tooltip.Trigger
+							<Tooltip.Trigger tabindex={-1}
 								class="absolute top-1/2 right-2 -translate-y-1/2 animate-ping cursor-pointer border-none bg-transparent p-0 text-xl"
 								>❌</Tooltip.Trigger
 							>

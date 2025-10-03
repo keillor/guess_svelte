@@ -2,66 +2,85 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { CreateCharacter } from '$lib/models/CreateCharacter.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { toast } from 'svelte-sonner';
+	import ToastError from './ToastError.svelte';
 	let {
 		characterData = $bindable(),
-		index,
+		index
 	}: {
-		characterData: CreateCharacter[],
-		index: number
+		characterData: CreateCharacter[];
+		index: number;
 	} = $props();
 
 	let isDuplicate: boolean = $derived.by(() => {
-		let newName = characterData[index].name
-		if(newName === '') return false;
-		for(let character of characterData) {
-			if(character == characterData[index]) {
+		let newName = characterData[index].name;
+		if (newName === '') return false;
+		for (let character of characterData) {
+			if (character == characterData[index]) {
 				continue;
 			}
-			if(character.name == newName) {
+			if (character.name == newName) {
 				//isDuplicate = true;
 				return true;
 			}
 		}
 		//isDuplicate = false;
 		return false;
-	})
-
+	});
 
 	async function handlePaste() {
 		const result = await navigator.clipboard.readText();
 		const regex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg|webp|avif|bmp|tiff))/i;
 		if (regex.test(result)) {
 			characterData[index].url = new URL(result);
+		} else {
+			toast.custom(ToastError, {
+				componentProps: {
+					message: 'Not a valid image URL',
+					loading: false
+				}
+			})
 		}
 	}
 </script>
 
 <div class="card" style:--bg-1="var(--color-white)">
-	<div class="flex flex-col gap-2">
+	<div class="flex flex-col gap-3">
 		{#if characterData[index].url.host != 'localhost'}
-		<img
-			class="characterImage self-center"
-			src={characterData[index].url.href}
-			alt={`character ${characterData[index].name}`}
-		/>
+			<img
+				class="characterImage self-center object-cover aspect-square"
+				src={characterData[index].url.href}
+				alt={`character ${characterData[index].name}`}
+			/>
 		{:else}
-		TODO: add placeholder img
+			<img
+				class="characterImage self-center object-cover aspect-square"
+				src='https://images.pexels.com/photos/3683107/pexels-photo-3683107.jpeg'
+				alt={`character ${characterData[index].name}`}
+			/>
 		{/if}
 		<span class="characterName">
-			<div class="relative flex items-center w-full">
+			<div class="relative flex w-full items-center">
 				<!-- onkeyup={() => handleIsDuplicate()} -->
 				<Input
 					bind:value={characterData[index].name}
 					class={`w-full pr-8 ${isDuplicate ? 'border-red-500' : ''}`}
+					placeholder='name'
 					aria-invalid={isDuplicate}
-					onfocusout={() => characterData[index].name = characterData[index].name.trim()}
+					onfocusout={() => (characterData[index].name = characterData[index].name.trim())}
 				/>
 				{#if isDuplicate}
 					<Tooltip.Provider delayDuration={100}>
 						<Tooltip.Root>
-							<Tooltip.Trigger class="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-none p-0 text-xl">❌</Tooltip.Trigger>
-							<Tooltip.Trigger class="animate-ping absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-none p-0 text-xl">❌</Tooltip.Trigger>
-							<Tooltip.Content class='bg-purple-800' arrowClasses='bg-purple-800'>
+							<Tooltip.Trigger
+								class="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer border-none bg-transparent p-0 text-xl"
+								>❌</Tooltip.Trigger
+							>
+							<Tooltip.Trigger
+								class="absolute top-1/2 right-2 -translate-y-1/2 animate-ping cursor-pointer border-none bg-transparent p-0 text-xl"
+								>❌</Tooltip.Trigger
+							>
+							<Tooltip.Content class="bg-purple-800" arrowClasses="bg-purple-800">
 								<p>Duplicate Name!</p>
 							</Tooltip.Content>
 						</Tooltip.Root>

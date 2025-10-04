@@ -4,6 +4,18 @@
 	import { Shortcuts } from 'svelte-keyboard-shortcuts';
 	import { Toaster } from 'svelte-sonner';
 	import { login, user } from '$lib/db/auth.svelte';
+	import { onNavigate } from '$app/navigation';
+
+	onNavigate((navigation) => {
+	if (!document.startViewTransition) return;
+
+	return new Promise((resolve) => {
+		document.startViewTransition(async () => {
+			resolve();
+			await navigation.complete;
+		});
+	});
+});
 
 	let { children } = $props();
 </script>

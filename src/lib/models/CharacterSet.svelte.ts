@@ -1,4 +1,4 @@
-import { collection, getDoc, doc, addDoc } from "firebase/firestore";
+import { collection, getDoc, doc, addDoc, deleteDoc, updateDoc, documentId } from "firebase/firestore";
 import { Character } from "./character";
 import { db } from "$lib/db/firebaseInit"; // Make sure you have your Firestore db exported here
 import { user } from "$lib/db/auth.svelte";
@@ -6,6 +6,7 @@ import { toast } from "svelte-sonner";
 import ToastWait from "$lib/gameElements/ToastWait.svelte";
 import ToastError from "$lib/gameElements/ToastError.svelte";
 import { goto } from "$app/navigation";
+import { CreateCharacter } from "./CreateCharacter.svelte";
 
 export class CharacterSet {
     characters: Character[];
@@ -29,14 +30,12 @@ export class CharacterSet {
         };
     }
 
-    static fromJSON(data: any): CharacterSet {
+    static fromJSON(data: any, docId: any): CharacterSet {
         // Assumes Character has a fromJSON method
-        const characters = (data.characters || []).map((c: any) => Character.fromJSON(c));
+        const characters = (data.characters || []).map((c: any) => CreateCharacter.fromJSON(c));
         const set = new CharacterSet(characters, data.setName);
         set.userId = data.userId;
-        //BUG: set docId correctly...this is a dummy placeholder and WILL FAIL!!!
-        //TODO: set docId correctly...this is a dummy placeholder and WILL FAIL!!!
-        set.docId = data.docID
+        set.docId = docId;
         return set;
     }
 
@@ -44,14 +43,32 @@ export class CharacterSet {
         const ref = doc(collection(db, "sets"), id);
         const snap = await getDoc(ref);
         if (!snap.exists()) return null;
-        return CharacterSet.fromJSON(snap.data());
+        return CharacterSet.fromJSON(snap.data(), snap.id);
+    }
+    
+    static async deleteFromFirebase(id: string) {
+        //TODO: complete `deleteFromFirebase(id: string)
+        const ref = doc(collection(db, "sets"), id);
+        try {
+            await deleteDoc(ref);
+        } catch {
+            return false;
+        }
+        return true;
     }
 
     async saveToFirebase() {
-        const data = CharacterSet.fromJSON(this.toJSON());
+        const data = CharacterSet.fromJSON(this.toJSON(), this.docId);
         const setsCol = collection(db, 'sets');
         const docRef = await addDoc(setsCol, data.toJSON());
         return docRef.id;
+    }
+
+    async updateInFirebase() {
+        const data = CharacterSet.fromJSON(this.toJSON(), this.docId);
+        const ref = doc(collection(db, "sets"), this.docId);
+        const docRef = await updateDoc(ref, data.toJSON());
+        //TODO: complete this function for updating something in firebase. This updates instead of creating a new one.
     }
 
     namesPresent() {
@@ -114,6 +131,7 @@ export class CharacterSet {
 			return;
         }
         let docId = '';
+        this.userId = user.user.uid;
         try {
             docId = await this.saveToFirebase();
         } catch (e) {
@@ -137,6 +155,76 @@ export class CharacterSet {
             }
         })
         this.submitted = '';
-        goto(`./set/${docId}`)
+        goto(`/set/${docId}`)
+	}
+
+    async handleUpdate(e: SubmitEvent) {
+		e.preventDefault();
+		this.submitted = toast.custom(ToastWait, {
+			componentProps: {
+				loading: true,
+				message: 'Submitting data...'
+			}
+		})
+		if(this.setName.trim() == '') {
+			toast.custom(ToastError, {
+				componentProps: {
+					message: 'Set name must not be empty',
+					loading: false
+				}
+			})
+			toast.dismiss(this.submitted)
+			this.submitted = '';
+			return;
+		}
+		if(this.namesPresent() == false) {
+			toast.custom(ToastError, {
+				componentProps: {
+					message:'All characters must have a name.',
+					loading: false
+				}
+			})
+			toast.dismiss(this.submitted)
+			this.submitted = '';
+			return;
+		}
+
+        if(this.urlsPresent() == false) {
+            toast.custom(ToastError, {
+				componentProps: {
+					message:'All characters must have a valid photo.',
+					loading: false
+				}
+			})
+			toast.dismiss(this.submitted)
+			this.submitted = '';
+			return;
+        }
+        let docId = '';
+        this.userId = user.user.uid;
+        try {
+            docId = await this.updateInFirebase();
+        } catch (e) {
+            console.log(e);
+            toast.custom(ToastError, {
+                componentProps: {
+                    message: "Whoops! There was an error saving your set...",
+                    loading: false
+                }
+            })
+            toast.dismiss(this.submitted);
+            this.submitted = '';
+            return;
+        }
+		// if checks pass, we can attempt to save to firebase.
+        toast.dismiss(this.submitted);
+        toast.custom(ToastWait, {
+            componentProps: {
+                message: "Set Saved!",
+                loading: false
+            }
+        })
+        this.submitted = '';
+        goto(`/set/${this.docId}`);
 	}
 }

@@ -79,6 +79,18 @@ export class CharacterSet {
 		}
 	}
 
+    namesUnique() {
+        let names : any = {};
+        for(let character of this.characters) {
+            if(character.name.trim() in names) {
+                return false;
+            } else {
+                names[character.name.trim()] = false;
+            }
+        }
+        return true;
+    }
+
     urlsPresent() {
         for(let character of this.characters) {
             if(character.url.href == 'http://localhost/') {
@@ -118,6 +130,17 @@ export class CharacterSet {
 			this.submitted = '';
 			return;
 		}
+        if(this.namesUnique() == false) {
+            toast.custom(ToastError, {
+				componentProps: {
+					message:'All characters must have unique names.',
+					loading: false
+				}
+			})
+			toast.dismiss(this.submitted)
+			this.submitted = '';
+			return;
+        }
 
         if(this.urlsPresent() == false) {
             toast.custom(ToastError, {
@@ -188,6 +211,17 @@ export class CharacterSet {
 			this.submitted = '';
 			return;
 		}
+        if(this.namesUnique() == false) {
+            toast.custom(ToastError, {
+				componentProps: {
+					message:'All characters must have unique names.',
+					loading: false
+				}
+			})
+			toast.dismiss(this.submitted)
+			this.submitted = '';
+			return;
+        }
 
         if(this.urlsPresent() == false) {
             toast.custom(ToastError, {

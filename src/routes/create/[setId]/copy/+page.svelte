@@ -9,13 +9,15 @@
 		<h1 class='text-3xl font-bold'>Copy Character Set</h1>
 	</div>
 	
-	<form onsubmit={async (e) => await data.set.handleSubmit(e)}>
-		<div class='flex flex-col md:w-md gap-2 justify-content-center'>
-			<Label for='setName'>Set Name</Label>
-			<Input id='setName' bind:value={data.set.setName}/>
-			<button disabled={data.set.submitted !== ''} class='outline-1 rounded-sm w-full bg-pink-300 hover:bg-pink-500 hover:text-white transition-colors disabled:bg-gray-500'>Create Copy</button>
-		</div>
-	</form>
+	<div class='flex flex-row justify-center p-2'>
+		<form onsubmit={async (e) => await data.set.handleSubmit(e)} class='w-screen md:w-md'>
+			<div class='flex flex-col md:w-md gap-2 justify-content-center'>
+				<Label for='setName'>Set Name</Label>
+				<Input id='setName' bind:value={data.set.setName}/>
+				<button disabled={data.set.submitted !== ''} class='outline-1 rounded-sm w-full bg-pink-300 hover:bg-pink-500 hover:text-white transition-colors disabled:bg-gray-500'>Create Copy</button>
+			</div>
+		</form>
+	</div>
 	
 	<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 w-full justify-items-center">
 		{#each data.set.characters as _, index}

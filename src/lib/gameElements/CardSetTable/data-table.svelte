@@ -17,6 +17,8 @@
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as Select from '$lib/components/ui/select/index.js';
+	import { goto } from '$app/navigation';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -25,11 +27,12 @@
 
 	let { data, columns }: DataTableProps<TData, TValue> = $props();
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 2 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 	let columnVisibility = $state<VisibilityState>({});
 	let rowSelection = $state<RowSelectionState>({});
+	let showCheckedOnly = $state<boolean>(false);
 
 	const table = createSvelteTable({
 		get data() {
@@ -98,17 +101,23 @@
 <div class="w-full">
 	<div class="flex items-center py-4">
 		<Input
-			placeholder="Filter emails..."
-			value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+			placeholder="Filter sets..."
+			value={(table.getColumn('setName')?.getFilterValue() as string) ?? ''}
 			onchange={(e) => {
-				table.getColumn('email')?.setFilterValue(e.currentTarget.value);
+				const url = new URL(window.location.href);
+				url.searchParams.set('hello', e.currentTarget.value);
+				history.replaceState(history.state, '', url.toString());
+				table.getColumn('setName')?.setFilterValue(e.currentTarget.value);
 			}}
 			oninput={(e) => {
-				table.getColumn('email')?.setFilterValue(e.currentTarget.value);
+				const url = new URL(window.location.href);
+				url.searchParams.set('hello', e.currentTarget.value);
+				history.replaceState(history.state, '', url.toString());
+				table.getColumn('setName')?.setFilterValue(e.currentTarget.value);
 			}}
 			class="max-w-sm"
 		/>
-		<DropdownMenu.Root>
+<!-- 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				{#snippet child({ props })}
 					<Button {...props} variant="outline" class="ml-auto">Columns</Button>
@@ -124,7 +133,27 @@
 					</DropdownMenu.CheckboxItem>
 				{/each}
 			</DropdownMenu.Content>
-		</DropdownMenu.Root>
+		</DropdownMenu.Root> -->
+		<Select.Root type="single" name="pageSize" value={pagination.pageSize} onValueChange={(value) => table.setPageSize(Number(value))}>
+			<Select.Trigger class="ml-auto w-[10em] bg-white">
+				Filter Size: {pagination.pageSize}
+			</Select.Trigger>
+			<Select.Content>
+				<Select.Group>
+					<Select.Label>Filter Size</Select.Label>
+					{#each [5,10,20,50] as num}
+						<Select.Item
+							value={num}
+							label={num}
+							disabled={num === pagination.pageSize}
+							
+						>
+							{num}
+						</Select.Item>
+					{/each}
+				</Select.Group>
+			</Select.Content>
+		</Select.Root>
 	</div>
 	<div class="w-full rounded-md border">
 		<Table.Root>
@@ -161,24 +190,6 @@
 			</Table.Body>
 		</Table.Root>
 	</div>
-	<div class="flex items-center justify-end space-x-2 py-4">
-		<Button
-			variant="outline"
-			size="sm"
-			onclick={() => table.previousPage()}
-			disabled={!table.getCanPreviousPage()}
-		>
-			Previous
-		</Button>
-		<Button
-			variant="outline"
-			size="sm"
-			onclick={() => table.nextPage()}
-			disabled={!table.getCanNextPage()}
-		>
-			Next
-		</Button>
-	</div>
 </div>
 <Pagination.Root count={data.length} perPage={pagination.pageSize}>
 	{#snippet children({ pages, currentPage })}
@@ -210,7 +221,7 @@
 	{/snippet}
 </Pagination.Root>
 
-<div class="text-muted-foreground flex-1 text-sm">
-  {table.getFilteredSelectedRowModel().rows.length} of{" "}
-  {table.getFilteredRowModel().rows.length} row(s) selected.
+<div class="flex-1 text-sm text-muted-foreground">
+	{table.getFilteredSelectedRowModel().rows.length} of{' '}
+	{table.getFilteredRowModel().rows.length} row(s) selected.
 </div>

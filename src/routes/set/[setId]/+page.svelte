@@ -2,7 +2,6 @@
 	import { user } from '$lib/db/auth.svelte';
 	import SetDeleteConfirmation from '$lib/gameElements/view/SetDeleteConfirmation.svelte';
 	import ViewaleCard from '$lib/gameElements/ViewaleCard.svelte';
-
     const { data } = $props();
 </script>
 <div class='p-4'>
@@ -11,7 +10,7 @@
 	</div>
     <div class='grid grid-cols-2 md:flex justify-center justify-items-center gap-5'>
 		<!-- TODO: just play with set link in the line below -->
-        <a href='/' class='bg-mint-500 hover:bg-mint-800 transition-all p-2 rounded-2xl text-xl w-40 outline-1 text-center cursor-default'>Play</a>
+        <a href='/init/{data.set.docId}' class='bg-mint-500 hover:bg-mint-800 transition-all p-2 rounded-2xl text-xl w-40 outline-1 text-center cursor-default'>Play</a>
         <a href={`/create/${data.set.docId}/copy`} class='bg-purple-500 hover:bg-purple-800 transition-all p-2 rounded-2xl text-xl w-40 outline-1 text-center cursor-default'>Copy</a>
         {#if data.set.userId == user.user.uid}
 		<SetDeleteConfirmation setId={data.set?.docId}>

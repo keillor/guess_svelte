@@ -1,9 +1,8 @@
 <script lang="ts" module>
-	import { z } from 'zod/v4';
+	import { number, z } from 'zod/v4';
 
 	const formSchema = z.object({
 		firstPlayer: z.number().min(0).max(1),
-		characterSet: z.string(),
 		character: z.number().min(0).max(23)
 	});
 </script>
@@ -19,6 +18,7 @@
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import ToastWait from '$lib/gameElements/ToastWait.svelte';
 	import ToastError from '$lib/gameElements/ToastError.svelte';
+	import { goto } from '$app/navigation';
 
 	const { data } = $props();
 
@@ -26,14 +26,22 @@
 		dataType: 'json',
 		validators: zod4(formSchema),
 		SPA: true,
-		onUpdate: ({ form: f }) => {
+		onUpdate: async ({ form: f }) => {
 			if (f.valid) {
 				toast.custom(ToastWait, {
 					componentProps: {
-						message: `You submitted ${JSON.stringify(f.data, null, 2)}`,
-						loading: false
-					}
+						message: `Creating lobby...`,
+						loading: true
+					},
+					duration: Number.POSITIVE_INFINITY
 				});
+				setTimeout(() => {
+					//TODO: upload to firebase here...await the result.
+					// if result is good, navigate to new page
+					goto(`/init/${data.set?.docId}/${f.data.firstPlayer}/${f.data.character}`);
+					//TODO: toast.dismiss();
+					//TODO: trigger new toast with infinite wait for waiting for opponet.
+				}, 0);
 			} else {
 				toast.custom(ToastError, {
 					componentProps: {

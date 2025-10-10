@@ -22,13 +22,18 @@
  </DropdownMenu.Trigger>
  <DropdownMenu.Content>
   <DropdownMenu.Group>
-   <DropdownMenu.Label>Actions</DropdownMenu.Label>
-   <DropdownMenu.Item onclick={() => navigator.clipboard.writeText(id)}>
-    Copy payment ID
-   </DropdownMenu.Item>
-  </DropdownMenu.Group>
-  <DropdownMenu.Separator />
-  <DropdownMenu.Item>View customer</DropdownMenu.Item>
-  <DropdownMenu.Item>View payment details</DropdownMenu.Item>
+      <a href={`/init/${id}`}>
+          <DropdownMenu.Item>Play With Set</DropdownMenu.Item>
+      </a>
+      <a href={`/set/${id}`}>
+          <DropdownMenu.Item>View Set</DropdownMenu.Item>
+      </a>
+    </DropdownMenu.Group>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Label>Actions</DropdownMenu.Label>
+    <DropdownMenu.Item onclick={() => navigator.clipboard.writeText(id)}>
+        Copy Set Id
+      </DropdownMenu.Item>
+    
  </DropdownMenu.Content>
 </DropdownMenu.Root>

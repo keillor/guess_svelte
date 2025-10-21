@@ -47,7 +47,7 @@ export class DrawerControl {
 					dismissButton: true,
 				},
 				duration: Number.POSITIVE_INFINITY,
-				dismissable: true,
+				dismissable: false,
 			});
 	}
 
@@ -56,6 +56,9 @@ export class DrawerControl {
 		this.yourTurnToast = '';
 	}
 	update() {
+		if(this.GuessWhoInstance.gameState == GameState.INIT) {
+			this.disableAllButtons();
+		}
 		if (this.GuessWhoInstance.isYourTurn()) {
 			// IT IS YOUR TURN
 			if(this.yourTurnToast) {
@@ -65,7 +68,6 @@ export class DrawerControl {
 				// enable all buttons.
                 this.enableAllButtons();
 			} else if (this.GuessWhoInstance.gameState == GameState.AWAITANSWER) {
-				//  TODO: show waiting indicator on toast (waiting for player to answer)
 				//  disable all buttons
                 this.disableAllButtons();
 				this.handleAwaitAnswerToast();

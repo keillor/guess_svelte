@@ -19,6 +19,9 @@
 	import ToastWait from '$lib/gameElements/ToastWait.svelte';
 	import ToastError from '$lib/gameElements/ToastError.svelte';
 	import { goto } from '$app/navigation';
+	import { GuessWhoGame } from '$lib/guessWho.svelte.js';
+	import { page } from '$app/state';
+	import { Character } from '$lib/models/character.js';
 
 	const { data } = $props();
 
@@ -35,12 +38,31 @@
 					},
 					duration: Number.POSITIVE_INFINITY
 				});
-				setTimeout(() => {
+				setTimeout(async () => {
+					console.log(page.params);
 					//TODO: upload to firebase here...await the result.
-					// if result is good, navigate to new page
-					goto(`/init/${data.set?.docId}/${f.data.firstPlayer}/${f.data.character}`);
-					//TODO: toast.dismiss();
-					//TODO: trigger new toast with infinite wait for waiting for opponet.
+					const character = new Character(
+						data.set?.characters[f.data.character].name,
+						data.set?.characters[f.data.character].url.href
+					);
+					try {
+						const result = await GuessWhoGame.createNewGameInFirestore(
+							page.params.setId,
+							f.data.firstPlayer == 0 ? true : false,
+							character
+						);
+						goto(`/wait/${result.gameId}`);
+						toast.dismiss();
+						//TODO: trigger new toast with infinite wait for waiting for opponet.
+					} catch (e) {
+						toast.dismiss();
+						toast.custom(ToastError, {
+							componentProps: {
+								message: 'Failed to create lobby!',
+								loading: false
+							}
+						});
+					}
 				}, 0);
 			} else {
 				toast.custom(ToastError, {
@@ -59,14 +81,14 @@
 <div class="p-2">
 	<Card.Root class="w-full sm:max-w-sm">
 		<Card.Header>
-			<Card.Title>Card Set: <span class='underline'>{data.set?.setName}</span></Card.Title>
+			<Card.Title>Card Set: <span class="underline">{data.set?.setName}</span></Card.Title>
 			<!-- <Card.Description
 				><span
 					>Set: <span class="font-bold underline">{data.set?.setName}</span></span
 				></Card.Description
 			> -->
 			<Card.Action>
-				<Button variant="link" href='/init'>Pick a different set</Button>
+				<Button variant="link" href="/init">Pick a different set</Button>
 			</Card.Action>
 		</Card.Header>
 		<Card.Content>

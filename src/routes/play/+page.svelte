@@ -4,6 +4,7 @@ import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	import Sidebar from '$lib/gameElements/Sidebar.svelte';
 	import { GuessWhoGame, playerId } from '$lib/guessWho.svelte';
 	import { Character } from '$lib/models/character';
+	import { GameState } from '$lib/models/gameState';
 	import { onDestroy } from 'svelte';
 	import { shortcuts } from 'svelte-keyboard-shortcuts';
 	let GuessWhoInstance = $state(new GuessWhoGame('myGame', '', true, playerId.playerA));

@@ -7,7 +7,7 @@
 	} = $props();
 </script>
 
-<div class="card w-40 md:w-50" style:--bg-1="var(--color-white)">
+<div class="card w-40 md:w-50 shadow-lg" style:--bg-1="var(--color-white)">
 	<div class="flex flex-col gap-3">
 		<img
 			class="characterImage aspect-square self-center object-cover"

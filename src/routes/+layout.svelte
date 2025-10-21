@@ -2,20 +2,51 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { Shortcuts } from 'svelte-keyboard-shortcuts';
-	import { Toaster } from 'svelte-sonner';
+	import { toast, Toaster } from 'svelte-sonner';
 	import { login, user } from '$lib/db/auth.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import ToastError from '$lib/gameElements/ToastError.svelte';
+	import ToastWait from '$lib/gameElements/ToastWait.svelte';
 
 	onNavigate((navigation) => {
-	if (!document.startViewTransition) return;
+		if (!document.startViewTransition) return;
 
-	return new Promise((resolve) => {
-		document.startViewTransition(async () => {
-			resolve();
-			await navigation.complete;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
 		});
 	});
-});
+	let errorToastId : number | string = '';
+	onMount(() => {
+		window.addEventListener('offline', () => {
+			if(errorToastId === '') {
+				errorToastId = toast.custom(ToastError, {
+					componentProps: {
+						loading: true,
+						message: 'Connection lost! Attempting to reconnect...'
+					},
+					dismissable: false,
+					duration: Number.POSITIVE_INFINITY
+				})
+			}
+		});
+		window.addEventListener('online', () => {
+			if(errorToastId !== '') {
+				toast.dismiss(errorToastId);
+				errorToastId = '';
+				toast.custom(ToastWait, {
+					componentProps: {
+						message: 'Connection restored!',
+						loading: false
+					},
+					duration: 3000,
+				})
+			}
+		});
+	});
 
 	let { children } = $props();
 </script>

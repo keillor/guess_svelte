@@ -47,7 +47,6 @@ export class CharacterSet {
     }
     
     static async deleteFromFirebase(id: string) {
-        //TODO: complete `deleteFromFirebase(id: string)
         const ref = doc(collection(db, "sets"), id);
         try {
             await deleteDoc(ref);
@@ -68,7 +67,6 @@ export class CharacterSet {
         const data = CharacterSet.fromJSON(this.toJSON(), this.docId);
         const ref = doc(collection(db, "sets"), this.docId);
         const docRef = await updateDoc(ref, data.toJSON());
-        //TODO: complete this function for updating something in firebase. This updates instead of creating a new one.
     }
 
     namesPresent() {

@@ -8,9 +8,7 @@
 	import { goto } from "$app/navigation";
     let open = $state(false);
 
-    //CharacterSet.deleteFromFirebase()
     async function handleClick() {
-        //TODO: implement handleClick for triggering a delete. Should close the modal when done;
         console.log(`set id: ${setId}`)
         const result = await CharacterSet.deleteFromFirebase(setId);
         if(!result) {

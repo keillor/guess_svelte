@@ -7,16 +7,16 @@ import {
 	getDoc,
 	setDoc,
 	onSnapshot,
-	FirestoreError,
 	addDoc,
 	collection,
-	deleteDoc
+	deleteDoc,
+	updateDoc,
+	arrayUnion
 } from 'firebase/firestore';
 import { GameState } from './models/gameState';
 import { DrawerControl } from './models/drawerControl.svelte';
 import ToastError from './gameElements/ToastError.svelte';
 import { user } from './db/auth.svelte';
-import { goto } from '$app/navigation';
 
 export enum playerId {
 	playerA = 0,
@@ -29,13 +29,12 @@ export class GuessWhoGame {
 	gameId: string;
 	characterSetId: string;
 
-	// game state. Determined based on gamestate. (asking | await answer | eliminating | final guess)
-	// and the isATurn boolean.
+	// state variables
 	gameState: GameState;
 	isATurn: boolean;
 	winner: playerId | null;
 
-	// ***player game data***
+	// player data
 	playerId: playerId;
 	ACharacter: Character | null = $state(null);
 	BCharacter: Character | null = $state(null);
@@ -43,10 +42,16 @@ export class GuessWhoGame {
 	AQNA: QNA[] = $state([]);
 	// Questions about 'B's characters (A asked the questions...)
 	BQNA: QNA[] = $state([]);
-	drawerControl: DrawerControl = new DrawerControl(this);
+	drawerControl: DrawerControl;
 	players: string[];
 
-	constructor(gameId: string, characterSetId: string, isATurn: boolean, playerId: playerId, subscribe: boolean = true) {
+	constructor(
+		gameId: string,
+		characterSetId: string,
+		isATurn: boolean,
+		playerId: playerId,
+		subscribe: boolean = true
+	) {
 		this.gameId = gameId;
 		this.characterSetId = characterSetId;
 		this.playerId = $state(playerId);
@@ -54,9 +59,10 @@ export class GuessWhoGame {
 		this.gameState = GameState.INIT;
 		this.winner = null;
 		this.players = [];
-		if(subscribe) {
+		if (subscribe) {
 			this.#unsubscribe = this.subscribeToFirestoreUpdates();
 		}
+		this.drawerControl = new DrawerControl(this);
 	}
 
 	destroy() {
@@ -97,7 +103,7 @@ export class GuessWhoGame {
 			BCharacter: this.BCharacter !== null ? this.BCharacter.toJSON() : null,
 			AQNA: this.AQNA.map((q) => q.toJSON()),
 			BQNA: this.BQNA.map((q) => q.toJSON()),
-			players: this.players,
+			players: this.players
 		};
 	}
 
@@ -125,7 +131,6 @@ export class GuessWhoGame {
 	): Promise<GuessWhoGame> {
 		const game = new GuessWhoGame('', characterSetId, isATurn, 0, false);
 		game.ACharacter = character;
-		//TODO: remove this line below	
 		game.BCharacter = character;
 		game.players.push(user.user.uid);
 		const docRef = await addDoc(collection(db, 'games'), game.toJSON());
@@ -142,14 +147,14 @@ export class GuessWhoGame {
 		const snap = await getDoc(doc(db, 'games', gameId));
 		if (snap.exists()) {
 			let data = snap.data();
-			data.gameId = snap.id
+			data.gameId = snap.id;
 			return GuessWhoGame.fromJSON(data);
 		}
 		return null;
 	}
 
 	/**
-	 * 
+	 *
 	 * @returns true if delete was sucsessful. false if delete failed.
 	 */
 	async deleteFromFirestore() {
@@ -161,8 +166,33 @@ export class GuessWhoGame {
 		return true;
 	}
 
+	async saveJoinToFirestore() {
+		const gameRef = doc(db, 'games', this.gameId);
+		try {
+			const result = await updateDoc(gameRef, {
+				BCharacter: this.BCharacter.toJSON(),
+				gameState: this.gameState,
+				players: arrayUnion(user.user.uid)
+			});
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
+	async joinGame(character: Character) {
+		this.BCharacter = character;
+		this.gameState = GameState.ASKING;
+		this.players.push(user.user.uid);
+		const result = await this.saveJoinToFirestore();
+		if(result == false) {
+			this.gameState == GameState.INIT;
+			this.players.pop();
+		}
+		return result;
+	}
+
 	/**
-	 * 
+	 *
 	 * @param gameId A valid firebase doc id in the games collection.
 	 * @returns true if delete was sucsessful. false if delete failed.
 	 */
@@ -195,15 +225,15 @@ export class GuessWhoGame {
 
 	subscribeToInitComplete() {
 		const unsub = onSnapshot(doc(db, 'games', this.gameId), (snap) => {
-			if(snap.exists()) {
-				const data = snap.data()
-				if(data.gameState == GameState.ASKING && data.players.length === 2) {
+			if (snap.exists()) {
+				const data = snap.data();
+				if (data.gameState == GameState.ASKING && data.players.length === 2) {
 					return true;
 				} else {
 					return false;
 				}
 			}
-		})
+		});
 		return unsub;
 	}
 

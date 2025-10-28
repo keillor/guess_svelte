@@ -41,6 +41,11 @@
 		border-radius: 1em;
 		user-select: none;
 		padding: 1em;
-		background: white;
+		background: var(--color-purple-100);
+	}
+	.card:hover {
+		rotate: 2deg;
+		transition: all;
+		transition-duration: 250ms;
 	}
 </style>

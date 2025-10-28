@@ -15,7 +15,7 @@
 			alt={`character ${character.name}`}
 		/>
 		<span class="characterName block w-full">
-			<p class="text-center whitespace-nowrap overflow-scroll sm:truncate">{character.name}</p>
+			<p class="text-center whitespace-nowrap overflow-scroll sm:truncate text-lg">{character.name}</p>
 		</span>
 	</div>
 </div>

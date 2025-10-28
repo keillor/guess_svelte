@@ -42,6 +42,8 @@
 		user-select: none;
 		padding: 1em;
 		background: var(--color-purple-100);
+		transition: all;
+		transition-duration: 250ms;
 	}
 	.card:hover {
 		rotate: 2deg;

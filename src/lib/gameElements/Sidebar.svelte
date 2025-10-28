@@ -2,6 +2,7 @@
 	import { Character } from "$lib/models/character";
 	import { crossfade, fly, slide } from "svelte/transition";
 	import FlippableCard from "./flippableCard.svelte";
+	import NumberFlow from "@number-flow/svelte";
 
     const { dummyCharacter, remaining }: {
         dummyCharacter: Character, remaining: any
@@ -14,9 +15,7 @@
 		</div>
 		<div class='remainingDiv'>
             <div class='remainingNum shadow-2xl'>
-                    {#key remaining}
-                        <p transition:slide>{remaining}</p>
-                    {/key}
+                <NumberFlow value={remaining}/>
                 </div>
 			<div class='remainingText'>Remaining Characters</div>
 		</div>

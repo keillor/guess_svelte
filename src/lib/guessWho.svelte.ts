@@ -80,7 +80,11 @@ export class GuessWhoGame {
 		this.isATurn = !this.isATurn;
 		this.gameState = GameState.ASKING;
 		try {
-			await this.saveToFirestore();
+			await updateDoc(doc(db, 'games', this.gameId), {
+				isATurn: this.isATurn,
+				gameState: this.gameState,
+			})
+			//await this.saveToFirestore();
 		} catch {
 			toast.custom(ToastError, {
 				componentProps: {
@@ -261,7 +265,12 @@ export class GuessWhoGame {
 		this.gameState = GameState.AWAITANSWER;
 		try {
 			console.log(this.toJSON())
-			await this.saveToFirestore();
+			await updateDoc(doc(db, 'games', this.gameId), {
+				gameState: this.gameState,
+				AQNA: this.AQNA.map((q) => q.toJSON()),
+				BQNA: this.BQNA.map((q) => q.toJSON()),
+			})
+			//await this.saveToFirestore();
 		} catch (e) {
 			console.log(e);
 			return { message: 'Something went wrong! Please try again.' };
@@ -292,20 +301,30 @@ export class GuessWhoGame {
 
 	async takeAGuess(character: Character) {
 		//player guessed correctly.
+		let data = {};
 		if (character == (this.playerId == playerId.playerA ? this.BCharacter : this.ACharacter)) {
 			this.winner = this.playerId == playerId.playerA ? playerId.playerA : playerId.playerB;
 			this.gameState = GameState.END;
-			this.saveToFirestore();
+			data = {
+				winner: this.winner,
+				gameState: GameState.END,
+			}
+			//this.saveToFirestore();
 		} else {
 			//player guessed incorrectly.
 			this.winner = this.playerId == playerId.playerA ? playerId.playerB : playerId.playerA;
 			this.gameState = GameState.END;
-			try {
-				await this.saveToFirestore();
-			} catch (e) {
-				console.log(e);
-				return { message: 'Something went wrong! Please try again.' };
+			data = {
+				winner: this.winner,
+				gameState: GameState.END,
 			}
+		}
+		try {
+			await updateDoc(doc(db, 'games', this.gameId), {
+				...data
+			});
+		} catch (e) {
+			return { message: 'Something went wrong! Please try again.' };
 		}
 		return true;
 	}

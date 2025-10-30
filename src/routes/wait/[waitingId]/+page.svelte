@@ -7,8 +7,20 @@
 	import { toast } from 'svelte-sonner';
 	import ToastError from '$lib/gameElements/ToastError.svelte';
 	import { goto } from '$app/navigation';
+	import type { GuessWhoGame } from '$lib/guessWho.svelte.js';
+	import type { CharacterSet } from '$lib/models/CharacterSet.svelte.js';
 
-	const { data } = $props();
+	const { data } : { data: {game: GuessWhoGame, characters: CharacterSet}} = $props();
+	data.game.subscribeToFirestoreUpdates();
+
+	$effect(() => {
+		if(data.game.players.length == 2) {
+			goto(`/play/${data.game.gameId}`)
+		}
+		return () => {
+			data.game.destroy();
+		}
+	})
 
 	async function handleCopyLink(isLink: boolean) {
 		let failed = false;
@@ -116,8 +128,9 @@
                 onclick={async () => handleCancel()}>Cancel Game</Button
             >
         </div>
+		<div class=''>
+			your secret character:
+			<ViewaleCard character={data.game?.ACharacter} />
+		</div>
 	</Card.Content>
 </Card.Root>
-
-your secret character:
-<ViewaleCard character={data.game?.ACharacter} />

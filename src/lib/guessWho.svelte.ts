@@ -58,7 +58,7 @@ export class GuessWhoGame {
 		this.isATurn = $state(isATurn);
 		this.gameState = GameState.INIT;
 		this.winner = null;
-		this.players = [];
+		this.players = $state([]);
 		if (subscribe) {
 			this.#unsubscribe = this.subscribeToFirestoreUpdates();
 		}
@@ -93,7 +93,6 @@ export class GuessWhoGame {
 
 	toJSON() {
 		return {
-			gameId: this.gameId,
 			characterSetId: this.characterSetId,
 			playerId: this.playerId,
 			isATurn: this.isATurn,
@@ -103,7 +102,7 @@ export class GuessWhoGame {
 			BCharacter: this.BCharacter !== null ? this.BCharacter.toJSON() : null,
 			AQNA: this.AQNA.map((q) => q.toJSON()),
 			BQNA: this.BQNA.map((q) => q.toJSON()),
-			players: this.players
+			players: this.players.map((player) => player),
 		};
 	}
 
@@ -139,6 +138,7 @@ export class GuessWhoGame {
 	}
 
 	async saveToFirestore() {
+		console.info(this.toJSON())
 		await setDoc(doc(db, 'games', this.gameId), this.toJSON());
 		return true;
 	}
@@ -148,7 +148,15 @@ export class GuessWhoGame {
 		if (snap.exists()) {
 			let data = snap.data();
 			data.gameId = snap.id;
-			return GuessWhoGame.fromJSON(data);
+			let game = GuessWhoGame.fromJSON(data);
+			if(game.players.at(0) == user.user.uid) {
+				//Player A client
+				game.playerId = playerId.playerA;
+			} else {
+				//Player B client
+				game.playerId = playerId.playerB;
+			}
+			return game;
 		}
 		return null;
 	}
@@ -251,8 +259,8 @@ export class GuessWhoGame {
 		}
 
 		this.gameState = GameState.AWAITANSWER;
-
 		try {
+			console.log(this.toJSON())
 			await this.saveToFirestore();
 		} catch (e) {
 			console.log(e);
@@ -268,9 +276,9 @@ export class GuessWhoGame {
 			return { message: 'Question must not be empty' };
 		}
 		if (this.playerId === playerId.playerA) {
-			this.BQNA[this.BQNA.length - 1].answer = answer;
-		} else {
 			this.AQNA[this.AQNA.length - 1].answer = answer;
+		} else {
+			this.BQNA[this.BQNA.length - 1].answer = answer;
 		}
 		try {
 			this.gameState = GameState.ELIMINATING;

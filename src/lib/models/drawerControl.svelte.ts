@@ -93,10 +93,11 @@ export class DrawerControl {
             this.disableAllButtons();
 			if (this.GuessWhoInstance.gameState == GameState.AWAITANSWER) {
 				// set most recent question set by player
+				console.info(this.GuessWhoInstance.toJSON());
 				if(this.GuessWhoInstance.playerId == playerId.playerA) {
-					this.mostRecentQuestion = this.GuessWhoInstance.BQNA[this.GuessWhoInstance.BQNA.length - 1].question;
-				} else {
 					this.mostRecentQuestion = this.GuessWhoInstance.AQNA[this.GuessWhoInstance.AQNA.length - 1].question;
+				} else {
+					this.mostRecentQuestion = this.GuessWhoInstance.BQNA[this.GuessWhoInstance.BQNA.length - 1].question;
 				}
                 this.answerDrawerOpen = true;
 			} else if (this.GuessWhoInstance.gameState == GameState.FINALGUESS) {

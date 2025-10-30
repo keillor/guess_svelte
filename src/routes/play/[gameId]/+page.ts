@@ -22,8 +22,8 @@ export async function load({ params }) {
             goto('/404');
         }
         return {
-            game,
-            cards
+            game: game,
+            characters: cards
         }
     } catch (e) {
         console.error('whoops! looks like there was an error...')

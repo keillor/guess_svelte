@@ -6,6 +6,7 @@ export async function load({ params }) {
 	try {
 		const game = await GuessWhoGame.loadFromFirestore(params.waitingId);
 		const characters = await CharacterSet.fromFirebase(game?.characterSetId);
+		//data.game.subscribeToFirestoreUpdates();
 		return {
 			game: game,
 			characters: characters,

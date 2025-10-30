@@ -1,5 +1,5 @@
 <script lang='ts'>
-import FlippableCard from '$lib/gameElements/flippableCard.svelte';
+	import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	import GameNavigationButtons from '$lib/gameElements/GameNavigationButtons.svelte';
 	import Sidebar from '$lib/gameElements/Sidebar.svelte';
 	import { GuessWhoGame, playerId } from '$lib/guessWho.svelte';
@@ -7,8 +7,8 @@ import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	import type { CharacterSet } from '$lib/models/CharacterSet.svelte';
 	import { onDestroy } from 'svelte';
 	import { shortcuts } from 'svelte-keyboard-shortcuts';
-	const { game, cards } : {game: GuessWhoGame, cards: CharacterSet} = $props();
-	let GuessWhoInstance = $state(new GuessWhoGame('myGame', '', true, playerId.playerA));
+	const { data } : { data: {game: GuessWhoGame, characters: CharacterSet} } = $props();
+	let GuessWhoInstance = $state(data.game);
 	let flipArray = $state(Array(24).fill(true));
 	let remaining = $derived(
 		flipArray.reduce((accumulator, value) => accumulator + (value ? 1 : 0), 0)

@@ -1,7 +1,3 @@
-<script>
-	import { logout } from "$lib/db/auth.svelte";
-
-</script>
 <main>
 	<div class="logoHolder">
 		<img class="logo" src="/logo.png" alt="Guest Who logo" />
@@ -9,16 +5,17 @@
 	<p class="subtitle">a guessing game</p>
 
 	<div class="navButtonDiv">
-		<a href='/play'>
+		<a href="/init">
 			<button class="navButtons">Create Game</button>
 		</a>
-		<button class="navButtons">Join Game</button>
-		<a href='/create'>
+		<a href='/join'>
+			<button class="navButtons">Join Game</button>
+		</a>
+		<a href="/create">
 			<button class="navButtons">Edit Characters</button>
 		</a>
-		<button class='navButtons' onclick={logout}>Sign Out</button>
+		<button class="navButtons" onclick={logout}>Sign Out</button>
 	</div>
-
 
 	<footer>
 		Made With 💜 by <a class="ghLink" href="https://www.github.com/keillor">KJ</a> -

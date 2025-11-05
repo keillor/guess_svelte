@@ -1,8 +1,10 @@
+import { CharacterFetch } from '$lib/models/CharacterFetch.svelte';
+
 export async function load({ url }) {
-    // return a plain object of query params: { a: '1', b: '2' }
-    const paramsObj = Object.fromEntries(url.searchParams.entries());
-    console.log(paramsObj);
+    const characterFetch = new CharacterFetch(500, 'sets');
+    const results = await characterFetch.firstFetch();
     return {
-        url: paramsObj
+        characterFetch,
+        sets: results,
     };
 }

@@ -136,8 +136,9 @@
 	  docId: '4L7hCt92hOIVhE1RQ9RY',
   }]
   const { data } = $props();
+  console.log(data);
 </script>
  
 <div class='flex flex-col items-center w-full'>
-    <DataTable data={results} {columns} />
+    <DataTable data={data.sets} {columns} />
 </div>

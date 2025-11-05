@@ -18,7 +18,8 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import { goto } from '$app/navigation';
+	import { goto, replaceState } from '$app/navigation';
+	import { page } from '$app/state';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -27,7 +28,7 @@
 
 	let { data, columns }: DataTableProps<TData, TValue> = $props();
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
 	let sorting = $state<SortingState>([]);
 	let columnFilters = $state<ColumnFiltersState>([]);
 	let columnVisibility = $state<VisibilityState>({});
@@ -96,52 +97,40 @@
 			}
 		}
 	});
+
+		const url = new URL(window.location.href);
+		table.getColumn('setName')?.setFilterValue(url.searchParams.get('search'));
+		
 </script>
 
-<div class="w-full">
-	<div class="flex items-center py-4">
+<div class="md:w-2xl">
+	<div class="flex flex-row flex-wrap items-center py-4">
 		<Input
-			placeholder="Filter sets..."
-			value={(table.getColumn('setName')?.getFilterValue() as string) ?? ''}
+			placeholder="Filter within page..."
+			value={table.getColumn('setName')?.getFilterValue() as string}
 			onchange={(e) => {
 				const url = new URL(window.location.href);
-				url.searchParams.set('hello', e.currentTarget.value);
-				history.replaceState(history.state, '', url.toString());
+				url.searchParams.set('search', e.currentTarget.value);
+				replaceState(url.toString(), history.state);
+				//history.replaceState(history.state, '', url.toString());
 				table.getColumn('setName')?.setFilterValue(e.currentTarget.value);
 			}}
 			oninput={(e) => {
 				const url = new URL(window.location.href);
-				url.searchParams.set('hello', e.currentTarget.value);
+				url.searchParams.set('search', e.currentTarget.value);
 				history.replaceState(history.state, '', url.toString());
 				table.getColumn('setName')?.setFilterValue(e.currentTarget.value);
 			}}
-			class="max-w-sm"
+			class="sm:max-w-sm"
 		/>
-<!-- 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger>
-				{#snippet child({ props })}
-					<Button {...props} variant="outline" class="ml-auto">Columns</Button>
-				{/snippet}
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Content align="end">
-				{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
-					<DropdownMenu.CheckboxItem
-						class="capitalize"
-						bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
-					>
-						{column.id}
-					</DropdownMenu.CheckboxItem>
-				{/each}
-			</DropdownMenu.Content>
-		</DropdownMenu.Root> -->
 		<Select.Root type="single" name="pageSize" value={pagination.pageSize} onValueChange={(value) => table.setPageSize(Number(value))}>
-			<Select.Trigger class="ml-auto w-[10em] bg-white">
-				Filter Size: {pagination.pageSize}
+			<Select.Trigger class="w-full ml-auto sm:w-[14em] bg-white">
+				Results per Page: {pagination.pageSize}
 			</Select.Trigger>
 			<Select.Content>
 				<Select.Group>
 					<Select.Label>Filter Size</Select.Label>
-					{#each [5,10,20,50] as num}
+					{#each [10,20,50] as num}
 						<Select.Item
 							value={num}
 							label={num}

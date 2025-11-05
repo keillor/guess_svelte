@@ -1,3 +1,7 @@
+<script>
+	import { logout } from "$lib/db/auth.svelte";
+
+</script>
 <main>
 	<div class="logoHolder">
 		<img class="logo" src="/logo.png" alt="Guest Who logo" />

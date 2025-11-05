@@ -1,6 +1,6 @@
 import { CharacterFetch } from '$lib/models/CharacterFetch.svelte';
 
-export async function load({ url }) {
+export async function load() {
     const characterFetch = new CharacterFetch(500, 'sets');
     const results = await characterFetch.firstFetch();
     return {

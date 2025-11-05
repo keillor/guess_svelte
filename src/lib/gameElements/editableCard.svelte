@@ -104,11 +104,9 @@
 					alt={`character ${characterData[index].name}`}
 				/>
 			{:else}
-				<img
-					class="characterImage aspect-square self-center object-cover"
-					src="https://images.pexels.com/photos/3683107/pexels-photo-3683107.jpeg"
-					alt={`character ${characterData[index].name}`}
-				/>
+				<div class='characterImage aspect-square self-center object-cover'>
+					<img src='/question.svg'/>
+				</div>
 			{/if}
 		</div>
 		<span class="characterName">

@@ -1,3 +1,8 @@
+import { createClient } from "pexels";
+import { PUBLIC_PEXELS_API_KEY } from "$env/static/public";
+
+const client = createClient(PUBLIC_PEXELS_API_KEY);
+
 function capFirst(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -14,4 +19,16 @@ export function generateName(){
 	var name = capFirst(name1[getRandomInt(0, name1.length + 1)]) + ' ' + capFirst(name2[getRandomInt(0, name2.length + 1)]);
 	return name;
 
+}
+
+/**
+ * @returns `n` photo urls.
+ */
+export async function randomPhotos(n: number) {
+	let photos : string[] = [];
+	const results = await client.photos.curated({ per_page: n})
+	for(let i = 0; i < n; i++) {
+		photos.push(results.photos[i].url);
+	}
+	return photos;
 }

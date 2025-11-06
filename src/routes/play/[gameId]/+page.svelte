@@ -19,7 +19,7 @@
 	}
 	const exampleImg = 'https://images.pexels.com/photos/3789888/pexels-photo-3789888.jpeg';
 	const dummyCharacter = new Character('Elizabeth', exampleImg);
-	const characterData : Character[] = Array(24).fill(dummyCharacter);
+	const characterData : Character[] = data.characters.characters;
 
 	onDestroy(() => {
 		GuessWhoInstance.destroy();

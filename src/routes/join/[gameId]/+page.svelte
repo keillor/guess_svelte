@@ -77,7 +77,7 @@
 														class="data-[state=checked]:border-pink-500"
 													/>
 													<div class="grid gap-1 font-normal">
-														<div class="text-center font-medium">{character.name}</div>
+														<div class="text-center font-medium overflow-clip text-nowrap">{character.name}</div>
 														<div class="text-xs leading-snug text-balance text-muted-foreground">
 															<img
 																src={character.url.href}

@@ -11,6 +11,8 @@
 	import { toast } from 'svelte-sonner';
 	import ToastError from '$lib/gameElements/ToastError.svelte';
 	import { goto } from '$app/navigation';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	const formSchema = z.object({
 		character: z.number().min(0).max(23)
 	});
@@ -38,6 +40,30 @@
 	});
 
 	const { form: formData, enhance } = form;
+
+	// svelte-ignore non_reactive_update
+	let scrollRef: HTMLDivElement | any = null;
+
+	function handleLeft() {
+		if (scrollRef) {
+			const viewport = scrollRef.children[0];
+			const firstCharacter = viewport.querySelector('.scrollSnapItem');
+			if (firstCharacter) {
+				const characterWidth = firstCharacter.getBoundingClientRect().width;
+				viewport.scrollBy({ left: -characterWidth - 16, behavior: 'smooth' });
+			}
+		}
+	}
+	function handleRight() {
+		if (scrollRef) {
+			const viewport = scrollRef.children[0];
+			const firstCharacter = viewport.querySelector('.scrollSnapItem');
+			if (firstCharacter) {
+				const characterWidth = firstCharacter.getBoundingClientRect().width;
+				viewport.scrollBy({ left: characterWidth + 12, behavior: 'smooth' });
+			}
+		}
+	}
 </script>
 
 <div class="m-3 flex flex-col items-center">
@@ -48,10 +74,6 @@
 	<Card.Root class="w-full sm:max-w-sm">
 		<Card.Header>
 			<Card.Title>Card Set: <span class="underline">{data.cards.setName}</span></Card.Title>
-			<Card.Action>
-				<!-- TODO: remove unused action button -->
-				<Button variant="link">ACTION BUTTONN</Button>
-			</Card.Action>
 		</Card.Header>
 		<Card.Content>
 			<form method="POST" class="space-y-6" use:enhance>
@@ -63,13 +85,13 @@
 						name="type"
 					>
 						<div class="max-w-[21em]">
-							<ScrollArea orientation="horizontal" class="box-border max-w-full overflow-x-auto">
+							<ScrollArea orientation="horizontal" class="box-border max-w-full overflow-x-auto" bind:ref={scrollRef}>
 								<div class="box-border flex w-full max-w-full flex-row flex-nowrap gap-3">
 									{#each data.cards.characters as character, index}
 										<Form.Control>
 											{#snippet children({ props })}
 												<Form.Label
-													class="flex w-40 items-start gap-2 rounded-lg border p-3 transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-800/20"
+													class="scrollSnapItem flex w-40 items-start gap-2 rounded-lg border p-3 transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-800/20"
 												>
 													<RadioGroup.Item
 														value={index}
@@ -94,8 +116,16 @@
 							</ScrollArea>
 						</div>
 					</RadioGroup.Root>
+					<div class='flex flex-row items-center justify-around'>
+						<button	type="button" onclick={handleLeft} class="transition-all active:scale-75">
+							<ChevronLeft />
+						</button>
+						<button type="button" onclick={handleRight} class="transition-all active:scale-75">
+							<ChevronRight />
+						</button>
+					</div>
 				</Form.Fieldset>
-				<Form.Button class="w-full">Join Game</Form.Button>
+				<Form.Button class="w-full bg-pink-500 hover:bg-pink-800 active:scale-95">Join Game</Form.Button>
 			</form>
 		</Card.Content>
 	</Card.Root>

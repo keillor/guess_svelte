@@ -5,6 +5,8 @@
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import type { GuessWhoGame } from '$lib/guessWho.svelte';
 	import type { Character } from '$lib/models/character';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	const {
 		GuessWhoInstance,
 		flipArray,
@@ -19,6 +21,7 @@
 		children: any;
 	} = $props();
 	let drawerOpen = $state(false);
+	// svelte-ignore non_reactive_update
 	let scrollRef: HTMLDivElement | any = null;
 	let message = $state<string>('');
 	const scrollAmount: number = 160;
@@ -57,7 +60,12 @@
 	}
 </script>
 
-<Drawer.Root bind:open={drawerOpen} onClose={() => {selectedCharacter = null;}}>
+<Drawer.Root
+	bind:open={drawerOpen}
+	onClose={() => {
+		selectedCharacter = null;
+	}}
+>
 	<Drawer.Trigger {disabled}>{@render children()}</Drawer.Trigger>
 	<Drawer.Content>
 		<div class="mx-auto w-full max-w-full sm:max-w-sm md:max-w-md">
@@ -65,12 +73,12 @@
 				<Drawer.Title>Did You Guess Who?</Drawer.Title>
 				<Drawer.Description>
 					<form
-						method='dialog'
+						method="dialog"
 						onsubmit={async (e: SubmitEvent) => {
 							e.preventDefault();
 							if (selectedCharacter != null) {
 								const result = await GuessWhoInstance.takeAGuess(selectedCharacter);
-								if(result != true) {
+								if (result != true) {
 									message = result.message;
 									return;
 								}
@@ -81,7 +89,7 @@
 						class="flex flex-col gap-2"
 					>
 						{#if message.length > 0}
-							<p class='text-red-500'>{message}</p>
+							<p class="text-red-500">{message}</p>
 						{/if}
 						{#if filteredCharacter.length == 0}
 							<div>
@@ -108,17 +116,25 @@
 									{/each}
 								</div>
 							</ScrollArea>
-							<div class="flex flex-row justify-around">
-								<button type="button" onclick={handleLeft}>◀</button>
-								<button type="button" onclick={handleRight}>▶</button>
+							<div class="flex flex-row items-center justify-around">
+								<button type="button" onclick={handleLeft} class="transition-all active:scale-75">
+									<ChevronLeft />
+								</button>
+								<button
+									type="button"
+									onclick={handleRight}
+									class="transition-all active:scale-75"
+								>
+									<ChevronRight />
+								</button>
 							</div>
-							{/if}
-							<Button
-								type="submit"
-								disabled={selectedCharacter === null}
-								class="w-full rounded-2xl bg-blue-600 p-3 text-2xl hover:bg-blue-800 disabled:bg-gray-400"
-								>Submit</Button
-							>
+						{/if}
+						<Button
+							type="submit"
+							disabled={selectedCharacter === null}
+							class="w-full rounded-2xl bg-blue-600 p-3 text-2xl hover:bg-blue-800 disabled:bg-gray-400"
+							>Submit</Button
+						>
 					</form>
 				</Drawer.Description>
 			</Drawer.Header>

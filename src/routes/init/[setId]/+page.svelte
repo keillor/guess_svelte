@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { number, z } from 'zod/v4';
+	import { z } from 'zod/v4';
 
 	const formSchema = z.object({
 		firstPlayer: z.number().min(0).max(1),
@@ -22,6 +22,8 @@
 	import { GuessWhoGame } from '$lib/guessWho.svelte.js';
 	import { page } from '$app/state';
 	import { Character } from '$lib/models/character.js';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 
 	const { data } = $props();
 
@@ -76,6 +78,30 @@
 	});
 
 	const { form: formData, enhance } = form;
+
+	// svelte-ignore non_reactive_update
+	let scrollRef: HTMLDivElement | any = null;
+
+	function handleLeft() {
+		if (scrollRef) {
+			const viewport = scrollRef.children[0];
+			const firstCharacter = viewport.querySelector('.scrollSnapItem');
+			if (firstCharacter) {
+				const characterWidth = firstCharacter.getBoundingClientRect().width;
+				viewport.scrollBy({ left: -characterWidth - 16, behavior: 'smooth' });
+			}
+		}
+	}
+	function handleRight() {
+		if (scrollRef) {
+			const viewport = scrollRef.children[0];
+			const firstCharacter = viewport.querySelector('.scrollSnapItem');
+			if (firstCharacter) {
+				const characterWidth = firstCharacter.getBoundingClientRect().width;
+				viewport.scrollBy({ left: characterWidth + 12, behavior: 'smooth' });
+			}
+		}
+	}
 </script>
 
 <div class="p-2">
@@ -151,13 +177,17 @@
 						name="type"
 					>
 						<div class="max-w-[21em]">
-							<ScrollArea orientation="horizontal" class="box-border max-w-full overflow-x-auto">
+							<ScrollArea
+								orientation="horizontal"
+								class="box-border max-w-full overflow-x-auto"
+								bind:ref={scrollRef}
+							>
 								<div class="box-border flex w-full max-w-full flex-row flex-nowrap gap-3">
 									{#each data.set.characters as character, index}
 										<Form.Control>
 											{#snippet children({ props })}
 												<Form.Label
-													class="flex w-40 items-start gap-2 rounded-lg border p-3 transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-800/20"
+													class="scrollSnapItem flex w-40 items-start gap-2 rounded-lg border p-3 transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-800/20"
 												>
 													<RadioGroup.Item
 														value={index}
@@ -165,7 +195,9 @@
 														class="data-[state=checked]:border-pink-500"
 													/>
 													<div class="grid gap-1 font-normal">
-														<div class="text-center font-medium overflow-clip text-nowrap">{character.name}</div>
+														<div class="overflow-clip text-center font-medium text-nowrap">
+															{character.name}
+														</div>
 														<div class="text-xs leading-snug text-balance text-muted-foreground">
 															<img
 																src={character.url.href}
@@ -182,8 +214,16 @@
 							</ScrollArea>
 						</div>
 					</RadioGroup.Root>
+					<div class='flex flex-row items-center justify-around'>
+						<button	type="button" onclick={handleLeft} class="transition-all active:scale-75">
+							<ChevronLeft />
+						</button>
+						<button type="button" onclick={handleRight} class="transition-all active:scale-75">
+							<ChevronRight />
+						</button>
+					</div>
 				</Form.Fieldset>
-				<Form.Button class="w-full">Submit</Form.Button>
+				<Form.Button class="w-full rounded-2xl bg-pink-500 hover:bg-pink-800 active:scale-95">Submit</Form.Button>
 			</form>
 		</Card.Content>
 	</Card.Root>

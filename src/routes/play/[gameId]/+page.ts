@@ -11,7 +11,7 @@ export async function load({ params }) {
             goto('/404');
             return;
         }
-        const cards = await CharacterSet.fromFirebase(game?.characterSetId);
+        const characters = await CharacterSet.fromFirebase(game?.characterSetId);
         if(game == null) {
             console.info('card does not exist')
             goto('/404');
@@ -23,7 +23,7 @@ export async function load({ params }) {
         }
         return {
             game: game,
-            characters: cards
+            characters: characters,
         }
     } catch (e) {
         console.error('whoops! looks like there was an error...')

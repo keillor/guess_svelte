@@ -27,8 +27,10 @@ export function generateName(){
 export async function randomPhotos(n: number) {
 	let photos : string[] = [];
 	const results = await client.photos.curated({ per_page: n})
+	console.log(results);
 	for(let i = 0; i < n; i++) {
-		photos.push(results.photos[i].url);
+		photos.push(results.photos[i].src.original);
 	}
 	return photos;
+
 }

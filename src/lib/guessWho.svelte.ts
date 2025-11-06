@@ -291,7 +291,11 @@ export class GuessWhoGame {
 		}
 		try {
 			this.gameState = GameState.ELIMINATING;
-			await this.saveToFirestore();
+			await updateDoc(doc(db, 'games', this.gameId), {
+				gameState: this.gameState,
+				AQNA: this.AQNA.map((q) => q.toJSON()),
+				BQNA: this.BQNA.map((q) => q.toJSON()),
+			})
 			return true;
 		} catch (e) {
 			console.log(e);

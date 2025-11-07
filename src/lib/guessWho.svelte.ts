@@ -77,6 +77,8 @@ export class GuessWhoGame {
 	}
 
 	async endTurn() {
+		const prevState = this.gameState;
+		const prevTurn = this.isATurn;
 		this.isATurn = !this.isATurn;
 		this.gameState = GameState.ASKING;
 		try {
@@ -86,6 +88,8 @@ export class GuessWhoGame {
 			})
 			//await this.saveToFirestore();
 		} catch {
+			this.gameState = prevState
+			this.isATurn = prevTurn;
 			toast.custom(ToastError, {
 				componentProps: {
 					loading: false,
@@ -272,6 +276,7 @@ export class GuessWhoGame {
 			})
 			//await this.saveToFirestore();
 		} catch (e) {
+			this.gameState = GameState.ASKING;
 			console.log(e);
 			return { message: 'Something went wrong! Please try again.' };
 		}
@@ -298,6 +303,7 @@ export class GuessWhoGame {
 			})
 			return true;
 		} catch (e) {
+			this.gameState = GameState.AWAITANSWER;
 			console.log(e);
 			return { message: 'Something went wrong! Please try again.' };
 		}

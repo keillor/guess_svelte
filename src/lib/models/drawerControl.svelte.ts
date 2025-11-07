@@ -5,6 +5,7 @@ import ToastWait from '$lib/gameElements/ToastWait.svelte';
 
 export class DrawerControl {
 	GuessWhoInstance: GuessWhoGame;
+	gameCompleteModalOpen = $state(false);
 	answerDrawerOpen = $state(false);
 	oldQUestionDrawerOpen = $state(false);
 	mostRecentQuestion = $state('');
@@ -56,8 +57,9 @@ export class DrawerControl {
 		this.yourTurnToast = '';
 	}
 	update() {
-		if(this.GuessWhoInstance.gameState == GameState.INIT) {
+		if(this.GuessWhoInstance.gameState == GameState.END) {
 			this.disableAllButtons();
+			this.gameCompleteModalOpen = true;
 		}
 		if (this.GuessWhoInstance.isYourTurn()) {
 			// IT IS YOUR TURN

@@ -88,6 +88,7 @@ export class DrawerControl {
 			}
 		} else {
 			if(this.yourTurnToast == '') {
+				this.dismissAwaitYourTurnToast();
 				this.awaitYourTurn();
 			}
 			// IT IS YOUR OPPONETS TURN

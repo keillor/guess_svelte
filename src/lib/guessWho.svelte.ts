@@ -329,11 +329,13 @@ export class GuessWhoGame {
 				gameState: GameState.END,
 			}
 		}
+		const prevState = this.gameState;
 		try {
 			await updateDoc(doc(db, 'games', this.gameId), {
 				...data
 			});
 		} catch (e) {
+			this.gameState = prevState
 			return { message: 'Something went wrong! Please try again.' };
 		}
 		return true;

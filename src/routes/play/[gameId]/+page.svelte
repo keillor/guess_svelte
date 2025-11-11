@@ -1,6 +1,7 @@
 <script lang='ts'>
 	import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	import GameNavigationButtons from '$lib/gameElements/GameNavigationButtons.svelte';
+	import GameResultsModal from '$lib/gameElements/GameResultsModal.svelte';
 	import Sidebar from '$lib/gameElements/Sidebar.svelte';
 	import { GuessWhoGame, playerId } from '$lib/guessWho.svelte';
 	import { Character } from '$lib/models/character';
@@ -35,6 +36,7 @@
 	</div>
 </main>
 <GameNavigationButtons {GuessWhoInstance} {characterData} {flipArray} selectedCharacter={dummyCharacter}/>
+<GameResultsModal isOpen={GuessWhoInstance.drawerControl.gameCompleteModalOpen} playerWon={GuessWhoInstance.winner == GuessWhoInstance.playerId}/>
 
 <div hidden>
 	<button class='items-center' use:shortcuts={{ keys: ['d'], type: 'callback', fn: () => {

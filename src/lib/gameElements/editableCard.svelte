@@ -105,7 +105,7 @@
 				/>
 			{:else}
 				<div class='characterImage aspect-square self-center object-cover'>
-					<img src='/question.svg'/>
+					<img src='/question.svg' alt='an empty character slot'/>
 				</div>
 			{/if}
 		</div>

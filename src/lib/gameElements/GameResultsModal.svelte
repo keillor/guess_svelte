@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	let { isOpen = $bindable(), playerWon = $bindable() } = $props();
 
@@ -53,8 +54,8 @@
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-			<AlertDialog.Action>Continue</AlertDialog.Action>
+			<AlertDialog.Cancel class='rounded-2xl'>Close Screen</AlertDialog.Cancel>
+			<Button href='/' class='rounded-2xl bg-pink-500 hover:bg-pink-800 cursor-default'>Start a New Game</Button>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

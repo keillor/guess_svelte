@@ -1,5 +1,5 @@
 export * from 'gsap';
-export * from 'gsap/DrawSVGPlugin';
+export * from 'gsap/SplitText';
 export * from 'gsap/TextPlugin';
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";

@@ -8,6 +8,8 @@
 	import { onMount } from 'svelte';
 	import ToastError from '$lib/gameElements/ToastError.svelte';
 	import ToastWait from '$lib/gameElements/ToastWait.svelte';
+	import { navigating } from '$app/state';
+	import GeneralLoading from '$lib/gameElements/animations/generalLoading.svelte';
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -58,6 +60,9 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+{#if navigating.type}
+    <GeneralLoading/>
+{/if}
 {#if user.user === null}
 	<div class="flex h-screen w-full flex-col items-center justify-center gap-3">
 		<h1 class="rounded-2xl bg-purple-500 p-3 text-3xl text-white">To continue, please sign in.</h1>

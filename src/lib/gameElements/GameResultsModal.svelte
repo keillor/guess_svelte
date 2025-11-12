@@ -18,7 +18,7 @@
 
 <AlertDialog.Root bind:open={isOpen}>
 	<AlertDialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-		Show Dialog
+		Show Results
 	</AlertDialog.Trigger>
 	<AlertDialog.Content>
 		<AlertDialog.Header>

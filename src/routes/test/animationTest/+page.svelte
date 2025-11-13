@@ -7,8 +7,8 @@
 	import WinAnimation from '$lib/gameElements/animations/WinAnimation.svelte';
 	import GameResultsModal from '$lib/gameElements/GameResultsModal.svelte';
 
-	let isOpen = $state(false);
-	let isWinner = $state(true);
+	let isOpen = $state(true);
+	let isWinner = $state(false);
 </script>
 
 <h2 class="w-min rounded-2xl border-2 border-black bg-mint-500 p-3 text-2xl">Tests</h2>

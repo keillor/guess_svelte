@@ -4,6 +4,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import GeneralLoading from '$lib/gameElements/animations/generalLoading.svelte';
 	import StarExample from '$lib/gameElements/animations/starExample.svelte';
+	import WinAnimation from '$lib/gameElements/animations/WinAnimation.svelte';
 	import GameResultsModal from '$lib/gameElements/GameResultsModal.svelte';
 
 	let isOpen = $state(false);

@@ -12,14 +12,12 @@
 		const splitLostText = new SplitText('#lostText', { type: 'words, chars' });
 		gsap.set('#lostText', { visibility: 'visible' });
 		winnerTimeline
-			.from(splitLostText.chars, {
-                autoAlpha: 0,
-                xPercent: 100,
-                stagger: {
-                    each: 0.05,
-                    from: 'end',
-                }
-            }).set(splitLostText.chars, {
+           .from(splitLostText.words, {
+            y:-100,
+            rotate: "random([-30,25])",
+            ease:'bounce.out',
+            stagger: 0.05
+           }).set(splitLostText.chars, {
                 transformOrigin: '50% 75%'
             }).to(splitLostText.chars, {
                 rotate: "random(-30,30)",
@@ -31,15 +29,23 @@
             }).set(splitLostText.chars.at(7), {
                 transformOrigin: '50% 75%'
             })
-            .to(splitLostText.chars.at(7), {
+            .to(splitLostText.chars, {
                 rotate: -180,
                 //y: 40,
                 ease: 'elastic.out',
                 duration: 1.8,
+                stagger: {
+                    each: 0.05,
+                    from: 'random'
+                }
             }).to(splitLostText.chars, {
                 rotate: 0,
                 y:0,
                 ease: 'bounce.out',
+                stagger: {
+                    each: 0.05,
+                    from: 'random'
+                },
                 onComplete: () => splitLostText.revert(),
             })
 	});

@@ -42,7 +42,6 @@
 				});
 				setTimeout(async () => {
 					console.log(page.params);
-					//TODO: upload to firebase here...await the result.
 					const character = new Character(
 						data.set?.characters[f.data.character].name,
 						data.set?.characters[f.data.character].url.href

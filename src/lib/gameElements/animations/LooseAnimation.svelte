@@ -19,6 +19,8 @@
                     each: 0.05,
                     from: 'end',
                 }
+            }).set(splitLostText.chars, {
+                transformOrigin: '50% 75%'
             }).to(splitLostText.chars, {
                 rotate: "random(-30,30)",
                 stagger: {
@@ -26,11 +28,14 @@
                     from: 'random',
                 },
                 ease: 'bounce.out'
-            }).to(splitLostText.chars.at(7), {
+            }).set(splitLostText.chars.at(7), {
+                transformOrigin: '50% 75%'
+            })
+            .to(splitLostText.chars.at(7), {
                 rotate: -180,
-                y: 40,
+                //y: 40,
                 ease: 'elastic.out',
-                duration: 1.2,
+                duration: 1.8,
             }).to(splitLostText.chars, {
                 rotate: 0,
                 y:0,

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { gsap, SplitText } from '$lib/gsap/gsapInit';
 	import { onMount } from 'svelte';
+	import { bounceIn } from 'svelte/easing';
 
 	onMount(() => {
 		if (animationComplete) {
@@ -11,8 +12,16 @@
 		}
 		const splitWinText = new SplitText('#winText', { type: 'chars' });
 		gsap.set('#winText', { visibility: 'visible' });
+		gsap.set(splitWinText.chars.at(6), {
+			autoAlpha: 0,
+			transformOrigin: '50% 30%',
+		})
+		gsap.set(splitWinText.chars.at(6), {
+			autoAlpha: 0,
+			rotate: -180
+		})
 		winnerTimeline
-			.from(splitWinText.chars, {
+			.from(splitWinText.chars.filter((_ , i) => i < 6), {
 				autoAlpha: 0,
 				rotation: 'random(-50,50)',
 				rotateX: -180,
@@ -21,8 +30,26 @@
 					each: 0.1,
 					from: 'start'
 				},
-				onComplete: () => {
+				/* onComplete: () => {
 					splitWinText.revert();
+				} */
+			}).to(splitWinText.chars.at(6), {
+				autoAlpha: 1,
+				rotate: 0,
+				ease: 'bounce.out'
+			}).to(splitWinText.chars.filter(( _ , i ) => i < 6), {
+				x: -12,
+				ease: 'back.out',
+				stagger: {
+					each: 0.05,
+					from: 'end'
+				}
+			}, '<').to(splitWinText.chars.filter(( _ , i ) => i < 6), {
+				x: 0,
+				ease: 'bounce.out',
+				stagger: {
+					each: 0.02,
+					from: 'start'
 				}
 			})
 			.from('.star', {
@@ -37,7 +64,6 @@
 						from: 'random'
 					}
 				},
-				'<'
 			)
 			.to('.star', {
 				opacity: 0.7,

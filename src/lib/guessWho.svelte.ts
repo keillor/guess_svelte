@@ -42,7 +42,7 @@ export class GuessWhoGame {
 	AQNA: QNA[] = $state([]);
 	// Questions about 'B's characters (A asked the questions...)
 	BQNA: QNA[] = $state([]);
-	drawerControl: DrawerControl;
+	drawerControl: DrawerControl | undefined;
 	players: string[];
 
 	constructor(
@@ -61,8 +61,8 @@ export class GuessWhoGame {
 		this.players = $state([]);
 		if (subscribe) {
 			this.#unsubscribe = this.subscribeToFirestoreUpdates();
+			this.drawerControl = new DrawerControl(this);
 		}
-		this.drawerControl = new DrawerControl(this);
 	}
 
 	destroy() {
@@ -234,7 +234,9 @@ export class GuessWhoGame {
 				this.BQNA = (data.BQNA || []).map((q: any) => QNA.fromJSON(q));
 				this.players = data.players;
 			}
-			this.drawerControl.update();
+			if(this.#unsubscribe) {
+				this.drawerControl.update();
+			}
 		});
 		return unsub;
 	}

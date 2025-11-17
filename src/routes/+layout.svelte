@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { Shortcuts } from 'svelte-keyboard-shortcuts';
 	import { toast, Toaster } from 'svelte-sonner';
 	import { login, user } from '$lib/db/auth.svelte';
 	import { onNavigate } from '$app/navigation';
@@ -53,7 +52,6 @@
 	let { children } = $props();
 </script>
 
-<Shortcuts options={{ generateKbd: false }} />
 <Toaster richColors />
 <svelte:head>
 	<title>Guest Who</title>

@@ -27,12 +27,8 @@
 			src={character.url.href}
 			alt={`character ${character.name}`}
 		/>
-		<span class=" characterName">
-			{#if character.name.length < 10}
-				{character.name}
-			{:else}
-				{character.name.slice(0,7)}...
-			{/if}
+		<span class="characterName overflow-clip text-nowrap w-full">
+			{character.name}
 		</span>
 	</div>
 	<div class="back">
@@ -50,11 +46,8 @@
 <style>
 
 	.characterName {
-		font-size: var(--text-2xl) /* 1.875rem = 30px */;
-    	line-height: var(--tw-leading, var(--text-3xl--line-height));
+		font-size: var(--text-lg);
 		color: var(--color-black);
-		/* text-underline-offset: 0.05em;
-		text-decoration-line: underline; */
 
 	}
 	.characterImage {

@@ -18,8 +18,6 @@
 	function handleFlip(index: number) {
 		flipArray[index] = !flipArray[index];
 	}
-	const exampleImg = 'https://images.pexels.com/photos/3789888/pexels-photo-3789888.jpeg';
-	const dummyCharacter = new Character('Elizabeth', exampleImg);
 	const characterData : Character[] = data.characters.characters;
 
 	onDestroy(() => {
@@ -28,14 +26,14 @@
 </script>
 
 <main class='gameboard'>
-	<Sidebar {dummyCharacter} {remaining}/>
+	<Sidebar myCharacter={data.game.playerId === playerId.playerA ? data.game.ACharacter : data.game.BCharacter} {remaining}/>
 	<div class="flippableContainer">
 		{#each characterData as character, i}
 			<FlippableCard {character} {handleFlip} index={i} flipped={flipArray[i]} />
 		{/each}
 	</div>
 </main>
-<GameNavigationButtons {GuessWhoInstance} {characterData} {flipArray} selectedCharacter={dummyCharacter}/>
+<GameNavigationButtons {GuessWhoInstance} {characterData} {flipArray} />
 <GameResultsModal isOpen={GuessWhoInstance.drawerControl.gameCompleteModalOpen} playerWon={GuessWhoInstance.winner == GuessWhoInstance.playerId}/>
 
 <div hidden>

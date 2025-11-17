@@ -4,13 +4,13 @@
 	import FlippableCard from "./flippableCard.svelte";
 	import NumberFlow from "@number-flow/svelte";
 
-    const { dummyCharacter, remaining }: {
-        dummyCharacter: Character, remaining: any
+    const { myCharacter, remaining }: {
+        myCharacter: Character, remaining: any
     } = $props();
 </script>
 <div class="sidebar">
 		<div class='yourCharacterDiv'>
-            <FlippableCard character={dummyCharacter} handleFlip={() => {null}} flipped={true} index={0}/>
+            <FlippableCard character={myCharacter} handleFlip={() => {null}} flipped={true} index={0}/>
             Your character
 		</div>
 		<div class='remainingDiv'>

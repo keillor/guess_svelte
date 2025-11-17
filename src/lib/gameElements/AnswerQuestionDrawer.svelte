@@ -7,14 +7,13 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { GuessWhoGame } from '$lib/guessWho.svelte';
 	import type { Character } from '$lib/models/character';
-	let { children, GuessWhoInstance, character, drawerOpen = $bindable(), question = $bindable()}: {children: any, GuessWhoInstance: GuessWhoGame, character: Character, drawerOpen: boolean, question: string} = $props();
+	let { GuessWhoInstance, character, drawerOpen = $bindable(), question = $bindable()}: { GuessWhoInstance: GuessWhoGame, character: Character, drawerOpen: boolean, question: string} = $props();
 	let answerText = $state<string>('');
 	let message = $state('');
 </script>
 
 <div hidden use:shortcuts={{ keys: ['q'], type: 'callback', fn: () => {drawerOpen = !drawerOpen;}}}></div>
 <Drawer.Root bind:open={drawerOpen} dismissible={false} onClose={() => {message = '';}}>
-	<Drawer.Trigger hidden>{@render children()}</Drawer.Trigger>
 	<Drawer.Content >
 		<div class="mx-auto w-full max-w-full sm:max-w-sm md:max-w-md">
 			<Drawer.Header>

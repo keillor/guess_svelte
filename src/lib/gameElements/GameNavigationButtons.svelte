@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { QNA } from '$lib/models/question';
-	import { shortcuts } from 'svelte-keyboard-shortcuts';
 	import AnswerQuestionDrawer from './AnswerQuestionDrawer.svelte';
 	import AskQuestionDrawer from './AskQuestionDrawer.svelte';
 	import FinalGuessDrawer from './FinalGuessDrawer.svelte';
@@ -33,7 +31,7 @@
 		<div class={`actionButton ${GuessWhoInstance.drawerControl.navButtonDisabled.takeAGuess ? 'actionButtonGray' : 'actionButtonBlue'}`} tabindex="0">Take A Guess</div>
 	</FinalGuessDrawer>
 
-	<AnswerQuestionDrawer {GuessWhoInstance} bind:drawerOpen={GuessWhoInstance.drawerControl.answerDrawerOpen} bind:question={GuessWhoInstance.drawerControl.mostRecentQuestion} character={selectedCharacter}>d</AnswerQuestionDrawer>
+	<AnswerQuestionDrawer {GuessWhoInstance} bind:drawerOpen={GuessWhoInstance.drawerControl.answerDrawerOpen} bind:question={GuessWhoInstance.drawerControl.mostRecentQuestion} character={selectedCharacter}></AnswerQuestionDrawer>
 </div>
 
 <style>

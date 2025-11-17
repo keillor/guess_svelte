@@ -36,19 +36,6 @@
 <GameNavigationButtons {GuessWhoInstance} {characterData} {flipArray} />
 <GameResultsModal isOpen={GuessWhoInstance.drawerControl.gameCompleteModalOpen} playerWon={GuessWhoInstance.winner == GuessWhoInstance.playerId}/>
 
-<div hidden>
-	<button class='items-center' use:shortcuts={{ keys: ['d'], type: 'callback', fn: () => {
-		for(let i = 0; i < flipArray.length; i++) {
-			flipArray[i] = false;
-		}
-	}}} hidden>Flip All Up!</button>
-	<button class='items-center' use:shortcuts={{ keys: ['u'], type: 'callback', fn: () => {
-		for(let i = 0; i < flipArray.length; i++) {
-			flipArray[i] = true;
-		}
-	}}} hidden>Flip All Down!</button>
-</div>
-
 <style>
 	.gameboard {
 		max-width: 100vw;

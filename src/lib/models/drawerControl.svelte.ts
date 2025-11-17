@@ -60,6 +60,7 @@ export class DrawerControl {
 		if(this.GuessWhoInstance.gameState == GameState.END) {
 			this.disableAllButtons();
 			this.gameCompleteModalOpen = true;
+			toast.dismiss();
 		}
 		if (this.GuessWhoInstance.isYourTurn()) {
 			// IT IS YOUR TURN

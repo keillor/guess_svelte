@@ -4,11 +4,10 @@
 	import EditableCard from "$lib/gameElements/editableCard.svelte";
 	import { CharacterSet } from "$lib/models/CharacterSet.svelte";
 	import { CreateCharacter } from "$lib/models/CreateCharacter.svelte";
-	import { generateName } from "$lib/utils/randomName";
     let rawCharacters : CreateCharacter[] = [];
 
     for(let i = 0; i < 24; i++) {
-        rawCharacters.push(new CreateCharacter(generateName(), 'http://localhost'));
+        rawCharacters.push(new CreateCharacter('', 'http://localhost'));
     }
 
 	const characterSet : CharacterSet = new CharacterSet(rawCharacters, '');

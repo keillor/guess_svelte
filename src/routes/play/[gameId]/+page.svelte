@@ -1,4 +1,5 @@
 <script lang='ts'>
+	import { user } from '$lib/db/auth.svelte';
 	import FlippableCard from '$lib/gameElements/flippableCard.svelte';
 	import GameNavigationButtons from '$lib/gameElements/GameNavigationButtons.svelte';
 	import GameResultsModal from '$lib/gameElements/GameResultsModal.svelte';
@@ -33,7 +34,7 @@
 		{/each}
 	</div>
 </main>
-<GameNavigationButtons {GuessWhoInstance} {characterData} {flipArray} />
+<GameNavigationButtons {GuessWhoInstance} {characterData} {flipArray} selectedCharacter={GuessWhoInstance.players.at(0) == user.user.uid ? GuessWhoInstance.ACharacter : GuessWhoInstance.BCharacter} />
 <GameResultsModal isOpen={GuessWhoInstance.drawerControl.gameCompleteModalOpen} playerWon={GuessWhoInstance.winner == GuessWhoInstance.playerId}/>
 
 <style>

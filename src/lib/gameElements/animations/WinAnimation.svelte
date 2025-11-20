@@ -30,9 +30,6 @@
 					each: 0.1,
 					from: 'start'
 				},
-				/* onComplete: () => {
-					splitWinText.revert();
-				} */
 			}).to(splitWinText.chars.at(6), {
 				autoAlpha: 1,
 				rotate: 0,
@@ -50,6 +47,9 @@
 				stagger: {
 					each: 0.02,
 					from: 'start'
+				},
+				onComplete: () => {
+					splitWinText.revert();
 				}
 			})
 			.from('.star', {

@@ -1,6 +1,6 @@
 import { GuessWhoGame, playerId } from '$lib/guessWho.svelte';
 import { toast } from 'svelte-sonner';
-import { GameState } from './gameState';
+import { GameState } from './GameState';
 import ToastWait from '$lib/gameElements/ToastWait.svelte';
 
 export class DrawerControl {

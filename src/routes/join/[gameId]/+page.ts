@@ -21,6 +21,6 @@ export async function load({ params }) {
             cards
         }
     } catch (e) {
-        goto('/404')
+        goto('/join')
     }
 }

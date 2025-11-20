@@ -29,7 +29,8 @@
 		}
 	}
 
-	function handleJoin() {
+	function handleJoin(e: SubmitEvent) {
+		e.preventDefault();
 		if(gameId) {
 			goto(`/join/${gameId}`);
 		} else {
@@ -54,7 +55,7 @@
 
 <div class="flex flex-col items-center">
 	<div class="flex w-full flex-col gap-3 sm:max-w-md">
-		<form onsubmit={() => handleJoin()}>
+		<form onsubmit={(e) => handleJoin(e)}>
 			<Label for="gameId">Game ID:</Label>
 			<Input id="gameId" bind:value={gameId} />
 			<div class="flex flex-row justify-around">

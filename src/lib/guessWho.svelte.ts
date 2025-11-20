@@ -13,7 +13,7 @@ import {
 	updateDoc,
 	arrayUnion
 } from 'firebase/firestore';
-import { GameState } from './models/gameState';
+import { GameState } from './models/GameState';
 import { DrawerControl } from './models/drawerControl.svelte';
 import ToastError from './gameElements/ToastError.svelte';
 import { user } from './db/auth.svelte';

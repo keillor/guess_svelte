@@ -314,7 +314,7 @@ export class GuessWhoGame {
 	async takeAGuess(character: Character) {
 		//player guessed correctly.
 		let data = {};
-		if (character == (this.playerId == playerId.playerA ? this.BCharacter : this.ACharacter)) {
+		if (character.name == (this.playerId == playerId.playerA ? this.BCharacter.name : this.ACharacter.name)) {
 			this.winner = this.playerId == playerId.playerA ? playerId.playerA : playerId.playerB;
 			this.gameState = GameState.END;
 			data = {

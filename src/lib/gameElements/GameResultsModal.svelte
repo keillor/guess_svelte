@@ -19,9 +19,9 @@
 </script>
 
 <AlertDialog.Root bind:open={isOpen}>
-	<AlertDialog.Trigger class={buttonVariants({ variant: 'outline' })}>
+	<!-- <AlertDialog.Trigger class={buttonVariants({ variant: 'outline' })}>
 		Show Results
-	</AlertDialog.Trigger>
+	</AlertDialog.Trigger> -->
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>The results are in...</AlertDialog.Title>
@@ -34,7 +34,7 @@
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel class='rounded-2xl'>Close Screen</AlertDialog.Cancel>
+			<!-- <AlertDialog.Cancel class='rounded-2xl'>Close Screen</AlertDialog.Cancel> -->
 			<Button href='/' class='rounded-2xl bg-pink-500 hover:bg-pink-800 cursor-default'>Start a New Game</Button>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>

@@ -41,8 +41,7 @@ jobs:
 
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
+      url: 'https://keillor.github.io'
     steps:
       - name: Deploy
         id: deployment

@@ -1,15 +1,16 @@
 <script>
+	import { asset, resolve } from "$app/paths";
 	import { logout } from "$lib/db/auth.svelte";
 
 </script>
 <main>
 	<div class="logoHolder">
-		<img class="logo" src="/logo.png" alt="Guest Who logo" />
+		<img class="logo" src={asset('/logo.png')} alt="Guest Who logo" />
 	</div>
 	<p class="subtitle">a guessing game</p>
 
 	<div class="navButtonDiv">
-		<a href="/init">
+		<a href={resolve('/init')}>
 			<button class="navButtons">Create Game</button>
 		</a>
 		<a href='/join'>

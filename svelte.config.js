@@ -12,7 +12,7 @@ const config = {
 			fallback: 'fallback.html'
 		}),
 		paths: {
-			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
+			base: '/guess_svelte'
 		},
 		prerender: {
 			handleUnseenRoutes: 'warn',

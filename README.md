@@ -1,38 +1,34 @@
-# sv
+# Guest Who 🙋‍♂️
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A guessing game written in Svelte 5 and uses Firebase Firestore to sync game state across clients.
+Guest Who is a single-page-application that can be hosted on a static server. 
 
-## Creating a project
+## Requirements 📋
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Current version of Node (>=24.10.0)
+- Firebase Firestore data.
 
-```sh
-# create a new project in the current directory
-npx sv create
+> Note: Users must sign in with a Google Account.
 
-# create a new project in my-app
-npx sv create my-app
-```
+## Getting Started 🏁
 
-## Developing
+- Clone this repository
+- `cd` into reppo and `npm install`
+- Edit the file at: `src->lib->db->firebaseInit.ts`
+    - Replace firebaseConfig object with your own data.
+- `npm run dev`
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Implemented Features 🤠
 
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- Pick a character for an opponet to guess.
+- Decide turn order
+- Ask and answer questions in real time with another player.
+- Create a custom set of characters.
+    - duplicate name detection
+    - edit a set
+    - copy a set
+    - delete a set
+- Join a game
+    - via code
+    - via link
+- Lots of other goodies :)

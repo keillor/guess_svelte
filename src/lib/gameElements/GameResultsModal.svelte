@@ -8,14 +8,6 @@
 
 	const starColors = 	['pink-500', 'pink-800', 'purple-500', 'purple-800', 'blue-600', 'blue-800'];
 	const starValues = 	['top-5 left-15', 'left-70 bottom-2', 'left-30 bottom-8', 'top-5 left-60' , 'left-5 bottom-0', 'left-40 bottom-20'];
-
-	const stars = starColors.map((v, i) => {
-		return {
-			color: v,
-			LRUD: starValues[i],
-			speed: (1.2 + (i * 0.4)),
-		};
-	})
 </script>
 
 <AlertDialog.Root bind:open={isOpen}>

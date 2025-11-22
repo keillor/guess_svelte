@@ -1,5 +1,6 @@
 <script lang="ts">
-	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import { resolve } from '$app/paths';
+import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import LooseAnimation from './animations/LooseAnimation.svelte';
@@ -27,7 +28,7 @@
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<!-- <AlertDialog.Cancel class='rounded-2xl'>Close Screen</AlertDialog.Cancel> -->
-			<Button href='/' class='rounded-2xl bg-pink-500 hover:bg-pink-800 cursor-default'>Start a New Game</Button>
+			<Button href={resolve('/')} class='rounded-2xl bg-pink-500 hover:bg-pink-800 cursor-default'>Start a New Game</Button>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

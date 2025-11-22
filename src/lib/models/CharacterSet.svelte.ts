@@ -7,6 +7,7 @@ import ToastWait from "$lib/gameElements/ToastWait.svelte";
 import ToastError from "$lib/gameElements/ToastError.svelte";
 import { goto } from "$app/navigation";
 import { CreateCharacter } from "./CreateCharacter.svelte";
+import { resolve } from "$app/paths";
 
 export class CharacterSet {
     characters: Character[];
@@ -176,7 +177,7 @@ export class CharacterSet {
             }
         })
         this.submitted = '';
-        goto(`/set/${docId}`)
+        goto(resolve(`/set/${docId}`))
 	}
 
     async handleUpdate(e: SubmitEvent) {
@@ -257,6 +258,6 @@ export class CharacterSet {
             }
         })
         this.submitted = '';
-        goto(`/set/${this.docId}`);
+        goto(resolve(`/set/${this.docId}`));
 	}
 }

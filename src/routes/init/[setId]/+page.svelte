@@ -24,6 +24,7 @@
 	import { Character } from '$lib/models/character.js';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import { resolve } from '$app/paths';
 
 	const { data } = $props();
 
@@ -52,7 +53,7 @@
 							f.data.firstPlayer == 0 ? true : false,
 							character
 						);
-						goto(`/wait/${result.gameId}`);
+						goto(resolve(`/wait/${result.gameId}`));
 						toast.dismiss();
 						//TODO: trigger new toast with infinite wait for waiting for opponet.
 					} catch (e) {
@@ -113,7 +114,7 @@
 				></Card.Description
 			> -->
 			<Card.Action>
-				<Button variant="link" href="/init">Pick a different set</Button>
+				<Button variant="link" href={resolve("/init")}>Pick a different set</Button>
 			</Card.Action>
 		</Card.Header>
 		<Card.Content>

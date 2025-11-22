@@ -1,5 +1,6 @@
 <script lang='ts'>
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
@@ -32,7 +33,7 @@
 	function handleJoin(e: SubmitEvent) {
 		e.preventDefault();
 		if(gameId) {
-			goto(`/join/${gameId}`);
+			goto(resolve(`/join/${gameId}`));
 		} else {
 			toast.custom(ToastError, {
 				componentProps: {
@@ -49,7 +50,7 @@
 	<h2>Please enter a game ID to join a game.</h2>
 	<h3 class='text-gray-600 italic'>
 		Looking to create a game?
-		<a class="link" href="/init">Click here</a>
+		<a class="link" href={resolve("/init")}>Click here</a>
 	</h3>
 </div>
 

@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 import { CharacterSet } from '$lib/models/CharacterSet.svelte.js';
 
 export async function load({ params, url }) {
@@ -6,7 +7,7 @@ export async function load({ params, url }) {
     if(set == null) {
         console.log(set);
         console.log(params.setId);
-        goto('/404');
+        goto(resolve('/404'));
     }
     return {
         set: set,

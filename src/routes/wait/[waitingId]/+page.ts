@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 import { GuessWhoGame } from '$lib/guessWho.svelte.js';
 import { CharacterSet } from '$lib/models/CharacterSet.svelte.js';
 
@@ -12,6 +13,6 @@ export async function load({ params }) {
 			characters: characters,
 		};
 	} catch (e) {
-		goto('/404');
+		goto(resolve('/404'));
 	}
 }

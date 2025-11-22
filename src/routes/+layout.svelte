@@ -9,7 +9,7 @@
 	import ToastWait from '$lib/gameElements/ToastWait.svelte';
 	import { navigating } from '$app/state';
 	import GeneralLoading from '$lib/gameElements/animations/generalLoading.svelte';
-	import { asset } from '$app/paths';
+	import { asset, assets } from '$app/paths';
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -56,7 +56,7 @@
 <Toaster richColors />
 <svelte:head>
 	<title>Guest Who</title>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href={asset('/favicon.svg')} />
 </svelte:head>
 
 {#if navigating.type}

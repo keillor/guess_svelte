@@ -16,7 +16,7 @@
 
 	$effect(() => {
 		if(data.game.players.length == 2) {
-			goto(`/play/${data.game.gameId}`)
+			goto(resolve(`/play/${data.game.gameId}`));
 		}
 		return () => {
 			data.game.destroy();
@@ -74,7 +74,7 @@
                 duration: 3000
             })
             setTimeout(() => {
-                goto('/');
+                goto(resolve('/'));
             }, 3000);
         } else {
             toast.custom(ToastError, {

@@ -9,6 +9,7 @@
 	import { goto } from '$app/navigation';
 	import type { GuessWhoGame } from '$lib/guessWho.svelte.js';
 	import type { CharacterSet } from '$lib/models/CharacterSet.svelte.js';
+	import { resolve } from '$app/paths';
 
 	const { data } : { data: {game: GuessWhoGame, characters: CharacterSet}} = $props();
 	data.game.subscribeToFirestoreUpdates();
@@ -26,7 +27,7 @@
 		let failed = false;
 		if (isLink) {
 			const host = window.location.host;
-			const result = navigator.clipboard.writeText(`${host}/join/${data.game.gameId}`);
+			const result = navigator.clipboard.writeText( host + resolve(`/join/${data.game.gameId}`));
 			await result
 				.then(() => {})
 				.catch(() => {

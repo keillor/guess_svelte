@@ -9,6 +9,7 @@
 	import ToastWait from '$lib/gameElements/ToastWait.svelte';
 	import { navigating } from '$app/state';
 	import GeneralLoading from '$lib/gameElements/animations/generalLoading.svelte';
+	import { asset } from '$app/paths';
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -65,7 +66,7 @@
 	<div class="flex h-screen w-full flex-col items-center justify-center gap-3">
 		<h1 class="rounded-2xl bg-purple-500 p-3 text-3xl text-white">To continue, please sign in.</h1>
 		<button onclick={login} aria-label="Continue With Google">
-			<img src="./google_continue.svg" alt="Continue with Google" />
+			<img src={asset("/google_continue.svg")} alt="Continue with Google" />
 		</button>
 	</div>
 {:else}

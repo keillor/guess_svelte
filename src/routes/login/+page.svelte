@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { login, logout, user } from '$lib/db/auth.svelte';
+	import { asset } from '$app/paths';
+import { login, logout, user } from '$lib/db/auth.svelte';
 	import { slide } from 'svelte/transition';
 </script>
 
@@ -7,7 +8,7 @@
 	<div transition:slide>
 		{#if user.user === null}
 			<button onclick={login} aria-label="Continue With Google" class='p-3'>
-                <img src='./google_continue.svg' alt='Continue with Google'/>
+                <img src={asset('/google_continue.svg')} alt='Continue with Google'/>
             </button>
 		{:else}
 			<div>

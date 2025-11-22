@@ -5,6 +5,7 @@
 	import { toast } from 'svelte-sonner';
 	import ToastError from './ToastError.svelte';
 	import { validImageUrl } from '$lib/utils/image';
+	import { asset } from '$app/paths';
 	let {
 		characterData = $bindable(),
 		index
@@ -105,7 +106,7 @@
 				/>
 			{:else}
 				<div class='characterImage aspect-square self-center object-cover'>
-					<img src='/question.svg' alt='an empty character slot'/>
+					<img src={asset('/question.svg')} alt='an empty character slot'/>
 				</div>
 			{/if}
 		</div>

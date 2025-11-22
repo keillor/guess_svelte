@@ -10,7 +10,7 @@ import { user } from '$lib/db/auth.svelte';
 		<h1 class='text-3xl font-bold'>Set: <span>{data.set.setName}</span></h1>
 	</div>
     <div class='grid grid-cols-2 md:flex justify-center justify-items-center gap-5'>
-        <a href={resolve('/init/{data.set.docId}')} class='bg-mint-500 hover:bg-mint-800 transition-all p-2 rounded-2xl text-xl w-40 outline-1 text-center cursor-default'>Play</a>
+        <a href={resolve(`/init/${data.set.docId}`)} class='bg-mint-500 hover:bg-mint-800 transition-all p-2 rounded-2xl text-xl w-40 outline-1 text-center cursor-default'>Play</a>
         <a href={resolve(`/create/${data.set.docId}/copy`)} class='bg-purple-500 hover:bg-purple-800 transition-all p-2 rounded-2xl text-xl w-40 outline-1 text-center cursor-default'>Copy</a>
         {#if data.set.userId == user.user.uid}
 		<SetDeleteConfirmation setId={data.set?.docId}>

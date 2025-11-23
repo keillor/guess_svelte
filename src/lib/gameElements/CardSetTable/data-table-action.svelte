@@ -2,6 +2,7 @@
  import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
  import { Button } from "$lib/components/ui/button/index.js";
  import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+	import { resolve } from "$app/paths";
  
  let { id }: { id: string } = $props();
 </script>
@@ -22,10 +23,10 @@
  </DropdownMenu.Trigger>
  <DropdownMenu.Content>
   <DropdownMenu.Group>
-      <a href={`/init/${id}`}>
+      <a href={resolve(`/init/${id}`)}>
           <DropdownMenu.Item>Play With Set</DropdownMenu.Item>
       </a>
-      <a href={`/set/${id}`}>
+      <a href={resolve(`/set/${id}`)}>
           <DropdownMenu.Item>View Set</DropdownMenu.Item>
       </a>
     </DropdownMenu.Group>

@@ -13,10 +13,10 @@
 		<a href={resolve('/init')}>
 			<button class="navButtons">Create Game</button>
 		</a>
-		<a href='/join'>
+		<a href={resolve('/join')}>
 			<button class="navButtons">Join Game</button>
 		</a>
-		<a href="/create">
+		<a href={resolve('/create')}>
 			<button class="navButtons">Edit Characters</button>
 		</a>
 		<button class="navButtons" onclick={logout}>Sign Out</button>

@@ -56,7 +56,7 @@
 <Toaster richColors />
 <svelte:head>
 	<title>Guest Who</title>
-	<link rel="icon" href={asset('/favicon.svg')} />
+	<link rel="icon" href={asset('/question.svg')} />
 </svelte:head>
 
 {#if navigating.type}

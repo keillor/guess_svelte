@@ -84,7 +84,6 @@ export class DrawerControl {
 				// open the oldQuestion drawer and show the new answer.
 				this.oldQUestionDrawerOpen = true;
 			} else if (this.GuessWhoInstance.gameState == GameState.END) {
-				// TODO: trigger win or loss animation
                 this.disableAllButtons();
 			}
 		} else {
@@ -105,10 +104,8 @@ export class DrawerControl {
 				}
                 this.answerDrawerOpen = true;
 			} else if (this.GuessWhoInstance.gameState == GameState.FINALGUESS) {
-				// TODO: trigger opponet triggered final guess toast
-
+				//NOTE: state not in use. Written in for clairty and expansion
 			} else if (this.GuessWhoInstance.gameState == GameState.END) {
-				// TODO: trigger win or loss animation
 			}
 		}
 	}

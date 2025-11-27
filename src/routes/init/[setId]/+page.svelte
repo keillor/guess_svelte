@@ -55,7 +55,6 @@
 						);
 						goto(resolve(`/wait/${result.gameId}`));
 						toast.dismiss();
-						//TODO: trigger new toast with infinite wait for waiting for opponet.
 					} catch (e) {
 						toast.dismiss();
 						toast.custom(ToastError, {

@@ -9,7 +9,7 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
-			fallback: 'fallback.html'
+			fallback: '404.html'
 		}),
 		paths: {
 			base: '/guess_svelte'

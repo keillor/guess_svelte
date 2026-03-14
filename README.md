@@ -32,3 +32,5 @@ Guest Who is a single-page-application that can be hosted on a static server.
     - via code
     - via link
 - Lots of other goodies :)
+
+> Note: firebase rules not published here.
